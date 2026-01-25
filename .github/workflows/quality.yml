@@ -1,0 +1,62 @@
+name: Lexpertz AI Quality Guard
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # Job 1: Build & Type Check
+  build:
+    name: Build & Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        # uses 'npm ci' for a clean, reproducible install based on lockfile
+        # If no lockfile exists yet, it falls back to install.
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Type Check & Build
+        # This ensures Next.js can compile your code and TS types are valid
+        run: npm run build
+
+  # Job 2: Code Quality (Linting)
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    needs: build # Only run if build succeeds
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: |
+           if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run Linter
+        # Checks for code errors and strict patterns
+        run: npm run lint
