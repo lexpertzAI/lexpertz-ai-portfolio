@@ -6,10 +6,10 @@ export default function Home() {
       <Hero />
       <ServicesGrid />
       
-      {/* Footer Area */}
-      <footer className="py-10 text-center text-zinc-600 text-sm border-t border-white/5">
-        <p>© 2026 Lexpertz AI. Verified Expertise.</p>
-      </footer>
+      {/* 
+         Legacy footer removed. 
+         The Global Footer is now handled automatically by layout.tsx 
+      */}
     </main>
   );
 }
