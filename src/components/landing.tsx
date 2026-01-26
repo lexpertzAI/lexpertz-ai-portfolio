@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Database, ShieldCheck, Cpu, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 // --- Components ---
@@ -50,19 +51,25 @@ export const Hero = () => (
       </p>
       
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button className="px-8 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition flex items-center justify-center gap-2">
+        <Link 
+          href="#about"
+          className="px-8 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold transition flex items-center justify-center gap-2"
+        >
           Start Automation <ArrowRight size={18} />
-        </button>
-        <button className="px-8 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition">
+        </Link>
+        <Link 
+          href="#services"
+          className="px-8 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition"
+        >
           View Solutions
-        </button>
+        </Link>
       </div>
     </motion.div>
   </section>
 );
 
 export const ServicesGrid = () => (
-  <section className="max-w-6xl mx-auto px-4 py-20">
+  <section className="max-w-6xl mx-auto px-4 py-20" id="services">
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <ServiceCard 
         icon={Database}
