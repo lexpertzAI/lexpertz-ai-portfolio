@@ -3,6 +3,7 @@ import { FounderSection } from "@/components/founder";
 import { TimelineSection } from "@/components/timeline";
 import { ProjectsSection } from "@/components/projects";
 import { TechStack } from "@/components/tech-stack"; // <--- Import
+import { ContactSection } from "@/components/contact";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <TimelineSection />
       <ProjectsSection />
       <TechStack /> {/* <--- The Engine Room */}
+      <ContactSection />
     </main>
   );
 }
