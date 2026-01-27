@@ -1,5 +1,6 @@
 import { Hero, ServicesGrid } from "@/components/landing";
 import { FounderSection } from "@/components/founder"; // <--- Importing the missing section
+import { ProjectsSection } from "@/components/projects"; // <--- Import
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       
       {/* 3. The Founder Profile (This was missing) */}
       <FounderSection /> 
+      <ProjectsSection /> {/* <--- Render */}
     </main>
   );
 }
