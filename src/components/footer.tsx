@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { Github, Linkedin, Twitter, Mail } from "lucide-react";
@@ -8,7 +9,14 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
         {/* Brand Info */}
         <div className="md:col-span-2 space-y-6">
-          <h2 className="text-xl font-bold text-white">Lexpertz AI</h2>
+          <Link href="/" className="inline-block relative h-10 w-48">
+             <Image 
+               src="/logo-full.png" 
+               alt="Lexpertz AI" 
+               fill
+               className="object-contain object-left"
+             />
+          </Link>
           <p className="text-zinc-400 max-w-sm text-sm leading-relaxed">
             Revolutionizing business through Enterprise RAG, Logic Evaluation, and 
             high-performance AI pipelines. Verified expertise, modernized solutions.
