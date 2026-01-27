@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,12 +21,27 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Section */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center transition-transform group-hover:scale-105">
-            <Cpu className="text-black w-5 h-5" />
+          {/* Mobile: Show Icon Only */}
+          <div className="md:hidden relative h-10 w-10">
+            <Image 
+              src="/logo-icon.png" 
+              alt="Lexpertz AI Icon" 
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
-          <span className="font-bold text-xl tracking-tight text-white">
-            Lexpertz<span className="text-cyan-500 underline decoration-cyan-500/30 underline-offset-4">AI</span>
-          </span>
+
+          {/* Desktop: Show Full Wordmark */}
+          <div className="hidden md:block relative h-8 w-40">
+            <Image 
+              src="/logo-full.png" 
+              alt="Lexpertz AI Logo" 
+              fill
+              className="object-contain object-left"
+              priority
+            />
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
