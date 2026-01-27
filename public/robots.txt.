@@ -1,0 +1,8 @@
+# Lexpertz AI - Crawler Configuration
+# Mode: Full Indexing
+
+User-agent: *
+Allow: /
+
+# The Map Location
+Sitemap: https://lexpertz-ai.vercel.app/sitemap.xml
