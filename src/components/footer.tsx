@@ -9,12 +9,13 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
         {/* Brand Info */}
         <div className="md:col-span-2 space-y-6">
-          <Link href="/" className="inline-block relative h-16 w-64">
+          <Link href="/" className="inline-block relative h-16 w-64"> {/* Increased from h-10 w-48 */}
              <Image 
                src="/logo-full.png" 
                alt="Lexpertz AI" 
                fill
                className="object-contain object-left"
+               priority
              />
           </Link>
           <p className="text-zinc-400 max-w-sm text-sm leading-relaxed">
