@@ -2,20 +2,31 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { Mail, MessageSquare, MapPin, Send, Loader2, CheckCircle } from "lucide-react";
 import Link from "next/link";
+
+// strictly typed interface to satisfy the build system
+type Inputs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  projectType: string;
+  message: string;
+  botcheck: boolean;
+};
 
 export const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
+  
+  // Using the specific type definition here
+  const { register, handleSubmit, reset } = useForm<Inputs>();
 
-  // --- Secure Submission Logic ---
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsSubmitting(true);
     
-    // Lexpertz AI Access Key
+    // Your specific Web3Forms Access Key
     const object = {
       access_key: "7e0196dc-e3d1-4199-ac9d-b4f9145311ea", 
       ...data
@@ -37,7 +48,7 @@ export const ContactSection = () => {
       
       if (result.success) {
         setIsSuccess(true);
-        reset(); // Clear the form
+        reset(); 
       }
     } catch (error) {
       console.error("Form Error:", error);
@@ -53,7 +64,6 @@ export const ContactSection = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           
-          {/* LEFT: Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -104,7 +114,6 @@ export const ContactSection = () => {
             </div>
           </motion.div>
 
-          {/* RIGHT: Intelligent Form UI */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -129,8 +138,7 @@ export const ContactSection = () => {
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
-                {/* Honeypot for Spam Protection */}
-                <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} {...register("botcheck")} />
+                <input type="checkbox" className="hidden" style={{ display: 'none' }} {...register("botcheck")} />
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
