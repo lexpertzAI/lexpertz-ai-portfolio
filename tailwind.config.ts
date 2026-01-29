@@ -10,10 +10,21 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          black: "#050505",
-          cyan: "#06b6d4",
-          dark: "#0a0a0a",
+          // The exact background color for high-contrast OLED screens
+          black: "#050505", 
+          // my Logo's Primary Cyan (Bright & Electric)
+          cyan: "#06b6d4", 
+          // my Logo's Secondary Blue (Deep & Trustworthy)
+          blue: "#2563eb", 
+          // Neutral Zinc for borders/text
+          zinc: "#18181b",
         },
+      },
+      backgroundImage: {
+        // Standardized gradient for text-clips and buttons
+        "brand-gradient": "linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)",
+        // Subtle glow for backgrounds
+        "brand-glow": "radial-gradient(circle at center, rgba(6,182,212,0.15) 0%, transparent 70%)",
       },
     },
   },
