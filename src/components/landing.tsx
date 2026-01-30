@@ -71,18 +71,37 @@ export const Badge = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const ServiceCard = ({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) => (
-  <motion.div 
-    whileHover={{ y: -5 }}
-    className="p-6 rounded-2xl border border-white/10 bg-brand-black/50 backdrop-blur-sm hover:bg-white/5 hover:border-brand-cyan/30 transition-all duration-300 group z-10"
-  >
-    <div className="h-10 w-10 rounded-lg bg-brand-cyan/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-      <Icon className="text-brand-cyan w-5 h-5" />
-    </div>
-    <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
-    <p className="text-zinc-400 text-sm leading-relaxed">{desc}</p>
-  </motion.div>
-);
+export const ServiceCard = ({ 
+  icon: Icon, 
+  title, 
+  desc, 
+  link 
+}: { 
+  icon: any, 
+  title: string, 
+  desc: string, 
+  link?: string 
+}) => {
+  const CardContent = (
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="p-6 rounded-2xl border border-white/10 bg-brand-black/50 backdrop-blur-sm hover:bg-white/5 hover:border-brand-cyan/30 transition-all duration-300 group z-10 h-full cursor-pointer"
+    >
+      <div className="h-10 w-10 rounded-lg bg-brand-cyan/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+        <Icon className="text-brand-cyan w-5 h-5" />
+      </div>
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+        {/* Visual arrow cue if it's a link */}
+        {link && <ArrowRight size={16} className="text-zinc-500 group-hover:text-brand-cyan opacity-0 group-hover:opacity-100 transition-opacity" />}
+      </div>
+      <p className="text-zinc-400 text-sm leading-relaxed">{desc}</p>
+    </motion.div>
+  );
+
+  // If a link is provided, wrap the card in it
+  return link ? <Link href={link} className="block h-full">{CardContent}</Link> : CardContent;
+};
 
 // --- Sections ---
 
@@ -131,16 +150,22 @@ export const Hero = () => (
 export const ServicesGrid = () => (
   <section className="max-w-6xl mx-auto px-4 py-20 relative z-10" id="services">
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* 1. Enterprise RAG (With Link to Product) */}
       <ServiceCard 
         icon={Database}
         title="Enterprise RAG"
         desc="Secure knowledge pipelines that turn your company data into an interactive, hallucination-free AI brain."
+        link="/products/axiom-verify" 
       />
+
+      {/* 2. Logic Auditing (No Link yet) */}
       <ServiceCard 
         icon={ShieldCheck}
         title="Logic Auditing"
         desc="Rigorous evaluation frameworks to ensure your AI models remain compliant, accurate, and safe."
       />
+
+      {/* 3. Edge AI (No Link yet) */}
       <ServiceCard 
         icon={Cpu}
         title="Edge AI"
