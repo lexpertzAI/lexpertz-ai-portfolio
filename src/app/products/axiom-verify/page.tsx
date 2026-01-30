@@ -5,23 +5,22 @@ import { ShieldCheck, Search, Zap, FileText, ArrowRight, XCircle, CheckCircle2, 
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-// --- Internal Components (The Visual Proof) ---
+// --- Internal Components ---
 
 const ComparisonDemo = () => {
   const [step, setStep] = useState(0);
 
-  // Simulating the "Verification Loop" animation
   useEffect(() => {
     const interval = setInterval(() => {
       setStep((prev) => (prev + 1) % 4);
-    }, 2000); // 2-second cycle
+    }, 2000); 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl mx-auto mt-20">
       
-      {/* LEFT: The "Standard" Way (The Problem) */}
+      {/* LEFT: Standard RAG */}
       <div className="p-8 rounded-2xl border border-red-500/20 bg-red-950/5 relative overflow-hidden">
         <div className="flex items-center gap-2 mb-6 text-red-400">
           <XCircle size={20} />
@@ -38,7 +37,7 @@ const ComparisonDemo = () => {
         </div>
       </div>
 
-      {/* RIGHT: The Axiom Way (The Solution) */}
+      {/* RIGHT: Axiom Engine */}
       <div className="p-8 rounded-2xl border border-brand-cyan/30 bg-brand-cyan/5 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-brand-gradient animate-pulse" />
         
@@ -50,7 +49,6 @@ const ComparisonDemo = () => {
         <div className="space-y-4 font-mono text-sm text-zinc-400">
           <p className="text-zinc-600">// User Query: "What is the Q3 profit?"</p>
           
-          {/* Simulated Processing Steps */}
           <div className="p-4 bg-black/50 rounded-lg border border-brand-cyan/20 relative">
             {step === 0 && <span className="text-brand-cyan animate-pulse">Scanning Vector DB (Qdrant)...</span>}
             {step === 1 && <span className="text-yellow-400">Critic Agent: Verifying Claims...</span>}
@@ -81,7 +79,6 @@ export default function AxiomVerifyPage() {
       
       {/* 1. HERO SECTION */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        {/* Nano-Grid Background Overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none -z-10" />
         
         <div className="max-w-6xl mx-auto text-center">
@@ -113,7 +110,6 @@ export default function AxiomVerifyPage() {
             </div>
           </motion.div>
 
-          {/* The Visual Proof */}
           <ComparisonDemo />
         </div>
       </section>
@@ -153,14 +149,14 @@ export default function AxiomVerifyPage() {
                 </p>
              </div>
 
-             {/* Card 3 */}
+             {/* Card 3 - FIX APPLIED HERE */}
              <div className="p-8 bg-brand-black border border-white/10 rounded-2xl hover:border-brand-cyan/40 transition group">
                 <div className="h-12 w-12 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-500 mb-6 group-hover:scale-110 transition">
                    <Zap size={24} />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Z-Score Gating</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed">
-                   Physics-informed thresholds. If the generation probability drifts >2.5σ from the source material context, the system halts.
+                   Physics-informed thresholds. If the generation probability drifts &gt;2.5σ from the source material context, the system halts.
                 </p>
              </div>
           </div>
@@ -181,4 +177,4 @@ export default function AxiomVerifyPage() {
 
     </main>
   );
-                }
+}
