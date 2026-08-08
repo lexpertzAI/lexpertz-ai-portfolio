@@ -11,7 +11,7 @@ import { SlideUp } from "@/components/motion";
 import { team } from "@/content/team";
 import { trackCTA } from "@/lib/analytics";
 
-/** TeamSection — founder-focused, follows StatsBar / ProcessTimeline. */
+/** TeamSection — founder-focused, follows the stats / process sections. */
 export function TeamSection() {
   const founder = team[0];
   if (!founder) return null;
