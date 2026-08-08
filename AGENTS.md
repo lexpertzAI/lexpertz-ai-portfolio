@@ -85,3 +85,31 @@ rtk pip list            rtk pnpm install        rtk npm run <script>
 - For debugging, use raw command without rtk prefix
 - `rtk proxy <cmd>` runs command without filtering but tracks usage
 <!-- /headroom:rtk-instructions -->
+
+## Responsive Requirements (MANDATORY — mobile + desktop)
+
+Every component, section, and design shipped to this repo must be authored
+**mobile-first** and verified at **both** ~375px mobile and ≥1280px desktop
+before it is considered done.
+
+- **Mobile-first authoring**: base Tailwind classes = mobile layout; `sm:` /
+  `md:` / `lg:` classes are progressive desktop upgrades. Do not design
+  desktop-first and squeeze down.
+- **Mandatory two-breakpoint check**: before marking work complete, verify the
+  component visually at ~375px and ≥1280px (device toolbar / real device).
+- **Touch targets ≥ 44px**; no hover-dependent UI without
+  `[@media(hover:hover)]:` gating (hover states get stuck on touch).
+- **Never let fixed/absolute positioning leak**: absolute/fixed children with
+  explicit `top`/`height` must be contained by a real height on their parent
+  (e.g. inline `height`, `md:h-[...]`), or they will paint over adjacent
+  sections. This bug class has bitten the hero pin and the process zigzag —
+  always confirm the container actually grows.
+- **Viewport units**: prefer `svh` (or `dvh`) over `vh` for above-the-fold /
+  pinned sections so the mobile browser URL bar doesn't shift layout.
+- **Responsive scroll animations**: use `gsap.matchMedia()` (or
+  `useMediaGreaterThan` for React state) to run different scroll distances /
+  sizes per breakpoint; never compute `isMobile` once at mount.
+- **Decorative layers** (gradients, textures, connector SVGs) that exist for
+  desktop ambiance should be `hidden md:block`.
+- **Reduced motion** stays gated everywhere (`prefers-reduced-motion` /
+  `useReducedMotion`) at every breakpoint.

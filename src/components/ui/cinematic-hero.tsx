@@ -105,64 +105,77 @@ export function CinematicHero({
     };
   }, [reducedMotion]);
 
-  // 2. Intro + pinned cinematic scroll timeline.
+  // 2. Intro + pinned cinematic scroll timeline — responsive via gsap.matchMedia.
+  // Desktop and mobile get their own contexts (separate scroll distance and
+  // pullback sizing); `prefers-reduced-motion` is folded into the queries so
+  // no timeline runs for reduced-motion users.
   React.useEffect(() => {
-    if (reducedMotion) return;
-
-    const isMobile = window.innerWidth < 768;
     const ctx = gsap.context(() => {
-      gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, filter: "blur(20px)", rotationX: -20 });
-      gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
-      gsap.set(".hero-badge", { autoAlpha: 0, y: 20 });
-      gsap.set(".main-card", { y: window.innerHeight + 200, autoAlpha: 1 });
-      gsap.set([".card-left-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
-      gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.8, filter: "blur(30px)" });
+      const mm = gsap.matchMedia();
 
-      const introTl = gsap.timeline({ delay: 0.3 });
-      introTl
-        .to(".hero-badge", { duration: 1, autoAlpha: 1, y: 0, ease: "expo.out" }, 0)
-        .to(".text-track", { duration: 1.8, autoAlpha: 1, y: 0, scale: 1, filter: "blur(0px)", rotationX: 0, ease: "expo.out" }, 0.2)
-        .to(".text-days", { duration: 1.4, clipPath: "inset(0 0% 0 0)", ease: "power4.inOut" }, "-=1.0");
+      const buildIntro = () => {
+        gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, filter: "blur(20px)", rotationX: -20 });
+        gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
+        gsap.set(".hero-badge", { autoAlpha: 0, y: 20 });
+        gsap.set(".main-card", { y: window.innerHeight + 200, autoAlpha: 1 });
+        gsap.set([".card-left-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
+        gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.8, filter: "blur(30px)" });
 
-      const scrollTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: `+=${isMobile ? 4600 : 7200}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-        },
+        const introTl = gsap.timeline({ delay: 0.3 });
+        introTl
+          .to(".hero-badge", { duration: 1, autoAlpha: 1, y: 0, ease: "expo.out" }, 0)
+          .to(".text-track", { duration: 1.8, autoAlpha: 1, y: 0, scale: 1, filter: "blur(0px)", rotationX: 0, ease: "expo.out" }, 0.2)
+          .to(".text-days", { duration: 1.4, clipPath: "inset(0 0% 0 0)", ease: "power4.inOut" }, "-=1.0");
+      };
+
+      const buildScrollTl = (end: number, pullbackWidth: string, pullbackHeight: string, pullbackRadius: string) =>
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: `+=${end}`,
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+          },
+        })
+          .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
+          .to(".main-card", { y: 0, ease: "power3.inOut", duration: 2 }, 0)
+          .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.5 })
+          .fromTo(".mockup-scroll-wrapper",
+            { y: 300, z: -500, rotationX: 50, rotationY: -30, autoAlpha: 0, scale: 0.6 },
+            { y: 0, z: 0, rotationX: 0, rotationY: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2.5 }, "-=0.8"
+          )
+          .fromTo(".phone-widget", { y: 40, autoAlpha: 0, scale: 0.95 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.15, ease: "back.out(1.2)", duration: 1.5 }, "-=1.5")
+          .fromTo(".floating-badge", { y: 100, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.5, stagger: 0.2 }, "-=2.0")
+          .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.5 }, "-=1.5")
+          .to({}, { duration: 2.5 })
+          .set(".hero-text-wrapper", { autoAlpha: 0 })
+          .set(".cta-wrapper", { autoAlpha: 1 })
+          .to({}, { duration: 1.5 })
+          .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text"], {
+            scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1.2, stagger: 0.05,
+          })
+          .to(".main-card", {
+            width: pullbackWidth,
+            height: pullbackHeight,
+            borderRadius: pullbackRadius,
+            ease: "expo.inOut",
+            duration: 1.8,
+          }, "pullback")
+          .to(".cta-wrapper", { scale: 1, filter: "blur(0px)", ease: "expo.inOut", duration: 1.8 }, "pullback")
+          .to(".main-card", { y: -window.innerHeight - 300, ease: "power3.in", duration: 1.5 })
+          .to(".cta-wrapper", { autoAlpha: 0, duration: 0.8 });
+
+      mm.add("(min-width: 768px) and (prefers-reduced-motion: no-preference)", () => {
+        buildIntro();
+        buildScrollTl(7200, "85vw", "85vh", "40px");
       });
 
-      scrollTl
-        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.15, filter: "blur(20px)", opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
-        .to(".main-card", { y: 0, ease: "power3.inOut", duration: 2 }, 0)
-        .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.5 })
-        .fromTo(".mockup-scroll-wrapper",
-          { y: 300, z: -500, rotationX: 50, rotationY: -30, autoAlpha: 0, scale: 0.6 },
-          { y: 0, z: 0, rotationX: 0, rotationY: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2.5 }, "-=0.8"
-        )
-        .fromTo(".phone-widget", { y: 40, autoAlpha: 0, scale: 0.95 }, { y: 0, autoAlpha: 1, scale: 1, stagger: 0.15, ease: "back.out(1.2)", duration: 1.5 }, "-=1.5")
-        .fromTo(".floating-badge", { y: 100, autoAlpha: 0, scale: 0.7, rotationZ: -10 }, { y: 0, autoAlpha: 1, scale: 1, rotationZ: 0, ease: "back.out(1.5)", duration: 1.5, stagger: 0.2 }, "-=2.0")
-        .fromTo(".card-left-text", { x: -50, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power4.out", duration: 1.5 }, "-=1.5")
-        .to({}, { duration: 2.5 })
-        .set(".hero-text-wrapper", { autoAlpha: 0 })
-        .set(".cta-wrapper", { autoAlpha: 1 })
-        .to({}, { duration: 1.5 })
-        .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text"], {
-          scale: 0.9, y: -40, z: -200, autoAlpha: 0, ease: "power3.in", duration: 1.2, stagger: 0.05,
-        })
-        .to(".main-card", {
-          width: isMobile ? "92vw" : "85vw",
-          height: isMobile ? "92vh" : "85vh",
-          borderRadius: isMobile ? "32px" : "40px",
-          ease: "expo.inOut",
-          duration: 1.8,
-        }, "pullback")
-        .to(".cta-wrapper", { scale: 1, filter: "blur(0px)", ease: "expo.inOut", duration: 1.8 }, "pullback")
-        .to(".main-card", { y: -window.innerHeight - 300, ease: "power3.in", duration: 1.5 })
-        .to(".cta-wrapper", { autoAlpha: 0, duration: 0.8 });
+      mm.add("(max-width: 767px) and (prefers-reduced-motion: no-preference)", () => {
+        buildIntro();
+        buildScrollTl(2800, "92vw", "92vh", "32px");
+      });
     }, containerRef);
 
     if (typeof document !== "undefined" && document.fonts?.ready) {
@@ -170,13 +183,13 @@ export function CinematicHero({
     }
 
     return () => ctx.revert();
-  }, [reducedMotion]);
+  }, []);
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "cinematic-hero relative flex h-screen w-full items-center justify-center overflow-hidden bg-background text-foreground",
+        "cinematic-hero relative flex h-svh w-full items-center justify-center overflow-hidden bg-background text-foreground",
         className
       )}
       style={{ perspective: "1500px" }}
@@ -202,7 +215,7 @@ export function CinematicHero({
 
       {/* BACKGROUND LAYER 2: tactile CTA stage */}
       <div className="cta-wrapper gsap-reveal absolute z-10 flex w-screen flex-col items-center justify-center px-4 text-center pointer-events-auto will-change-transform">
-        <h2 className="mb-6 text-4xl font-bold tracking-tight text-silver-matte md:text-6xl">
+        <h2 className="mb-6 text-3xl font-bold tracking-tight text-silver-matte sm:text-4xl md:text-6xl">
           {ctaHeading}
         </h2>
         <p className="mx-auto mb-12 max-w-xl text-lg font-light leading-relaxed text-muted-foreground md:text-xl">

@@ -5,6 +5,7 @@ import { m } from "framer-motion";
 import { Pin } from "lucide-react";
 
 import { useReducedMotion } from "@/components/three/use-reduced-motion";
+import { useMediaGreaterThan } from "@/lib/hooks/use-media";
 import { cn } from "@/lib/utils";
 
 /**
@@ -130,20 +131,24 @@ export function ProcessSteps({
   const reducedMotion = useReducedMotion();
   const data = steps && steps.length > 0 ? steps : DEFAULT_STEPS;
   const isZigzag = layout === "zigzag";
+  // SSR-safe: false on server + first client paint, flips to true on desktop
+  // after mount. Keeps the mobile stacked layout intact on phones.
+  const isDesktop = useMediaGreaterThan("md");
+  const applyZigzag = isZigzag && isDesktop;
 
   const { height, d } = React.useMemo(
-    () => buildZigzag(data.length, cardWidth),
-    [data.length, cardWidth]
+    () => (isZigzag ? buildZigzag(data.length, cardWidth) : { height: 0, d: "" }),
+    [isZigzag, data.length, cardWidth]
   );
 
   if (data.length === 0) return null;
 
   return (
     <div className={cn("relative", className)}>
-      {/* Paper-rule texture */}
+      {/* Paper-rule texture (desktop ambiance only) */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.08] dark:opacity-[0.15]"
+        className="pointer-events-none absolute inset-0 hidden opacity-[0.08] dark:opacity-[0.15] md:block"
         style={{
           backgroundImage: "linear-gradient(#000 1px, transparent 1px)",
           backgroundSize: "100% 32px",
@@ -152,7 +157,7 @@ export function ProcessSteps({
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-0 dark:opacity-[0.1]"
+        className="pointer-events-none absolute inset-0 hidden opacity-0 dark:opacity-[0.1] md:block"
         style={{
           backgroundImage: "linear-gradient(#fff 1px, transparent 1px)",
           backgroundSize: "100% 32px",
@@ -160,23 +165,23 @@ export function ProcessSteps({
         }}
       />
 
-      {/* Edge fades into the page background */}
+      {/* Edge fades into the page background (desktop only) */}
       <div
         aria-hidden="true"
-        className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r"
+        className="from-background pointer-events-none absolute inset-y-0 left-0 hidden w-1/2 bg-gradient-to-r md:block"
       />
       <div
         aria-hidden="true"
-        className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l"
+        className="from-background pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 bg-gradient-to-l md:block"
       />
 
       <div className="relative z-10 mx-auto w-full max-w-[1000px]">
         <div
           className={cn(
-            "relative mx-auto flex h-auto w-full max-w-[1000px] flex-col space-y-8 md:space-y-0",
+            "relative mx-auto flex w-full max-w-[1000px] flex-col space-y-8 md:space-y-0",
             isZigzag ? "md:block" : "md:flex md:flex-col md:space-y-8"
           )}
-          style={isZigzag ? ({ "--md-height": `${height}px` } as React.CSSProperties) : undefined}
+          style={applyZigzag ? { height: `${height + 32}px` } : undefined}
         >
           {isZigzag && data.length > 1 ? (
             <svg
@@ -222,13 +227,14 @@ export function ProcessSteps({
               <div
                 key={step.title}
                 className={cn(
-                  "relative w-full transition-transform duration-300 hover:z-30 hover:scale-105",
+                  "relative w-full transition-transform duration-300",
+                  "[@media(hover:hover)]:hover:z-30 [@media(hover:hover)]:hover:scale-105",
                   isZigzag && "md:absolute md:w-[280px]",
                   rotate,
                   side
                 )}
                 style={
-                  isZigzag
+                  applyZigzag
                     ? ({ top: index * ROW_HEIGHT, width: cardWidth } as React.CSSProperties)
                     : undefined
                 }
