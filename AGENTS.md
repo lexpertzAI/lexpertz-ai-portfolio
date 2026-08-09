@@ -103,7 +103,8 @@ before it is considered done.
   explicit `top`/`height` must be contained by a real height on their parent
   (e.g. inline `height`, `md:h-[...]`), or they will paint over adjacent
   sections. This bug class has bitten the hero pin and the process zigzag —
-  always confirm the container actually grows.
+  always confirm the container actually grows. See `docs/lessons-learned.md`
+  for the full bug-class catalog and fixes.
 - **Viewport units**: prefer `svh` (or `dvh`) over `vh` for above-the-fold /
   pinned sections so the mobile browser URL bar doesn't shift layout.
 - **Responsive scroll animations**: use `gsap.matchMedia()` (or
