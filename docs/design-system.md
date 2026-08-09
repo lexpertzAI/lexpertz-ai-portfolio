@@ -55,27 +55,30 @@ differentiator.
 **Accent discipline:** cyan is the only accent used for text/interactive
 elements (links, key metrics, focus ring, chart stroke). Blue appears only
 inside the cyan→blue gradient (brand identity: buttons, badges, glow, hero
-gradient text) and the scroll-morph hero card back-face — it harmonizes with
-the existing scenes by construction.
+gradient text) and the existing scenes by construction.
 
 **Success token** is defined and used only where a positive outcome reads
 semantically (contact-form confirmation). Homepage metrics stay cyan to
 preserve single-accent restraint.
 
-## Hero (scroll-morph)
+## Hero (cinematic)
 
-`ScrollMorphHero` (`src/components/ui/scroll-morph-hero.tsx`) drives the
-homepage hero: 20 flip-cards assemble **scatter → line → circle**, morph into
-a **bottom arc** on a captured virtual scroll, then shuffle. Composition:
+`CinematicHero` (`src/components/ui/cinematic-hero.tsx`) drives the
+homepage hero: a GSAP `ScrollTrigger.pin` scene whose content responds to
+the captured virtual scroll. Composition:
 
-- `sections/hero-scroll-morph.tsx` owns content (badge, headline, copy, CTAs)
-  and swaps to a static gradient poster under `prefers-reduced-motion`.
-- Cards are `m.div` (LazyMotion strict) with a 3D hover flip; images are
-  `next/image` from `images.unsplash.com` (allowlisted in `next.config.mjs`).
-- Virtual scroll is wheel/touch captured on the container and **released at
-  bounds** so the page scrolls on after the morph plays out.
-- Content opacity is driven by the morph spring: intro text fades out as the
-  arc forms; the top overlay (copy + CTAs) fades in at `morph ≥ 0.8`.
+- `sections/hero-cinematic.tsx` owns content (badge, headline, copy, CTAs)
+  and pulls the section up over the layout's `pt-16` via `className="relative -mt-16"`.
+  Under `prefers-reduced-motion` it renders a static poster (`StaticCinematicHero`)
+  with the same messaging and no JS motion.
+- The pinned root is `h-svh` so the pin-spacer is not clipped by a
+  fixed/short container. The container itself is plain `relative -mt-16`
+  (no `h-screen overflow-hidden`).
+- Desktop/mobile branching is done with `gsap.matchMedia()` — never with a one-time
+  `isMobile` flag at mount.
+- Responsive breakpoints are verified at ~375px mobile and ≥1280px desktop.
+  Hover-dependent UI is gated with `@media(hover:hover)`.
+- Touch targets are ≥44px. Decorative layers are `hidden md:block`.
 
 ## Growth chart
 
@@ -92,5 +95,6 @@ Pass a stable `gradientId` when more than one chart mounts.
 - Metric values and section indexes are mono (`font-mono`), uppercase labels
   use `.eyebrow`.
 - Light mode exists as a fallback only; tokens remain functional, not tuned.
-- Reduced motion: global CSS kill-switch + JS gates (Lenis, 3D canvas,
-  counters, tilt) — unchanged by this system.
+- Reduced motion: global CSS kill-switch + JS gates (3D canvas,
+  counters, tilt) — unchanged by this system. The cinematic hero provides
+  a static poster fallback automatically.

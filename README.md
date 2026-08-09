@@ -13,8 +13,8 @@ Live at **[lexpertzai.cc](https://lexpertzai.cc)**.
 ### The Stack
 - **Framework:** [Next.js 16](https://nextjs.org) (App Router, Turbopack, Server Components)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com) (base-nova)
-- **Animations:** [Framer Motion](https://www.framer.com/motion/) (LazyMotion strict) + [Lenis](https://lenis.darkroom.engineering) (smooth scroll)
-- **Hero:** scroll-morph flip-card scene (Framer Motion, reduced-motion aware)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/) (LazyMotion strict) + [GSAP](https://gsap.com) 3.15 (ScrollTrigger)
+- **Hero:** cinematic GSAP ScrollTrigger pin scene (`gsap.matchMedia()` for desktop/mobile, reduced-motion poster fallback)
 - **Charts:** [Recharts](https://recharts.org) (brand-gradient growth chart)
 - **Typography:** Space Grotesk (display) · Geist Sans (body) · Geist Mono (technical labels)
 - **Type Safety:** TypeScript 5 (Strict Mode)

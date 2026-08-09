@@ -16,16 +16,16 @@ visual identity, semantic tokens, layered motion, clean composition).
 
 ## Shipped
 
-### 1. Scroll-Morph Hero ✅
+### 1. Cinematic Hero ✅
 
 | | |
 |---|---|
-| Concept | Replace the WebGL particle hero with a Framer Motion flip-card scene. |
-| Behavior | 20 cards assemble scatter → line → circle, morph to a bottom arc on a captured virtual scroll, then shuffle; scroll released at bounds. Hover flips cards. |
-| Content | Existing badge / headline / copy / CTAs preserved. |
-| Fallback | `prefers-reduced-motion` → static gradient poster with full content. |
-| Files | `src/components/ui/scroll-morph-hero.tsx` · `src/components/sections/hero-scroll-morph.tsx` |
-| Commit | `8fbe9d9` |
+| Concept | Replace the WebGL particle hero and the scroll-morph flip-card hero with a GSAP ScrollTrigger pin scene. |
+| Behavior | `CinematicHero` renders a scroll-pinned `h-svh` scene with brand-material content; desktop/mobile branching via `gsap.matchMedia()`; `-mt-16` on the section pulls over the layout `pt-16`. |
+| Content | Badge, headline, copy, CTAs, card heading — same messaging as predecessor. |
+| Fallback | `prefers-reduced-motion` → static poster (`StaticCinematicHero`) with full content and `cinematic-hero` material styles (film-grain, bg-grid-theme, 3D matte text, btn-tactile utilities). |
+| Files | `src/components/ui/cinematic-hero.tsx` · `src/components/sections/hero-cinematic.tsx` |
+| Commit | current |
 
 ### 2. Featured Stats Section ✅
 
@@ -54,15 +54,21 @@ aesthetic.
 **New primitive:** `ServiceCard` (ui) → replaces `BentoCard` + `TiltCard`
 in `sections/services-grid.tsx`.
 
-### 4. ProcessTimeline — Living Pipeline 🔲
+~~### 4. ProcessTimeline — Living Pipeline~~ ❌ Dropped (superseded)
 
-**Why:** phases are static cards; the scroll-line is the only motion.
+The old `process-timeline.tsx` was replaced by a server component
+`process-section.tsx` wrapping the reusable `ProcessSteps` primitive
+(`ui/process-steps.tsx`). Shipped as part of the homepage refresh.
 
-**Concept:** each phase reveals KPIs / artifacts on scroll (eval scores,
-latency, handoff checklist) — "process as a live dashboard". Reuse `GrowthChart`
-as mini sparklines per phase.
-
-**New primitive:** `PhaseCard` (ui) with an artifact slot.
+**Key implementation notes:**
+- Steps are driven by `src/content/process.ts` (brand themes: cyan/blue/indigo).
+- `useMediaGreaterThan("md")` gates the zigzag card layout; hover states
+  are gated to `@media(hover:hover)`.
+- The zigzag container height is set via inline `style={{ height }}` so
+  absolutely-positioned card children don't collapse. **Pitfall:** an
+  unused `--md-height` custom property previously caused the container to
+  collapse and cards to overlap the next section — always pass a real
+  pixel/`svh` value to the height prop.
 
 ### 5. TeamSection — Founder Anchor 🔲
 
@@ -109,10 +115,10 @@ field-level motion using existing motion tokens.
 
 | # | Concept | Priority | Status |
 |---|---------|----------|--------|
-| 1 | Scroll-Morph Hero | — | ✅ Shipped |
+| 1 | Cinematic Hero | — | ✅ Shipped |
 | 2 | Featured Stats Section | — | ✅ Shipped |
 | 3 | ServicesGrid card interaction | Tier 1 | 🔲 Pending |
-| 4 | ProcessTimeline living pipeline | Tier 1 | 🔲 Pending |
+| 4 | ProcessSteps (replaces ProcessTimeline) | — | ✅ Shipped |
 | 5 | TeamSection founder anchor | Tier 2 | 🔲 Pending |
 | 6 | InsightsPreview case cards | Tier 2 | 🔲 Pending |
 | 7 | CTASection entrance | Tier 2 | 🔲 Pending |

@@ -270,13 +270,13 @@ lexpertz-ai-portfolio/
 │   │   ├── sitemap.ts    # Generated sitemap (all routes, incl. content slugs)
 │   │   └── globals.css   # Global styles: HSL design tokens + type-scale utilities
 │   ├── components/
-│   │   ├── ui/           # shadcn/ui primitives (+ ScrollMorphHero, GrowthChart)
+│ │ ├── ui/ # shadcn/ui primitives (+ CinematicHero, GrowthChart, ProcessSteps)
 │   │   ├── layout/       # Custom layout components (navbar, footer, mobile-menu)
 │   │   ├── sections/     # Homepage section components
 │   │   ├── motion/       # Motion primitives (FadeIn, SlideUp, Stagger, CountUp, ScrollTransform, TiltCard)
 │   │   ├── three/        # Dormant WebGL particle scene (no longer mounted)
 │   │   ├── forms/        # Form components
-│   │   └── providers/    # Theme, Motion (LazyMotion), SmoothScroll (Lenis)
+│ │ └── providers/ # Theme, Motion (LazyMotion)
 │   ├── content/          # Static TypeScript data (services, case-studies, team, insights, featured-stats)
 │   └── lib/
 │       ├── validators/   # Zod schemas
@@ -293,63 +293,13 @@ lexpertz-ai-portfolio/
 └── README.md             # Project overview
 ```
 
-## Hero (Scroll-Morph)
-
-The homepage hero is a client-only Framer Motion scene, composed as:
-
-- **`sections/hero-scroll-morph.tsx`** — owns content (badge, headline, copy,
-  CTAs) and swaps the whole scene for a static CSS gradient poster under
-  `prefers-reduced-motion`.
-- **`ui/scroll-morph-hero.tsx`** — the animation engine. 20 flip-cards
-  assemble **scatter → line → circle**, morph to a **bottom arc** on a
-  captured virtual scroll (wheel/touch on the container, `{ passive: false }`),
-  then shuffle. Virtual scroll is **released at bounds** so the page scrolls
-  on after the morph plays out.
-
-Key invariants:
-
-- Components must use `m.div` (LazyMotion strict `domAnimation` bundle).
-- Card images are `next/image` from `images.unsplash.com` (allowlisted in
-  `next.config.mjs` remotePatterns).
-- Motion values are subscribed once (`on("change", ...)`) and pushed into
-  React state to drive card targets; springs are compositor-friendly.
-- Scatter positions use a deterministic seeded PRNG (render-pure, SSR-safe).
-
-## Charts
-
-`recharts` powers the `GrowthChart` primitive (`ui/growth-chart.tsx`): a
-brand-gradient area chart with a custom token-styled tooltip. The homepage
-stats strip (`sections/featured-stats-section.tsx`) consumes the typed data in
-`content/featured-stats.ts`. Pass a stable `gradientId` when mounting more
-than one chart.
-
-## Design System
-
-Dark-first typography + color tokens. Display font is Space Grotesk
-(headlines), body is Geist Sans, technical labels/metrics are Geist Mono.
-Single-cyan accent discipline (`#06b6d4`) with blue reserved for brand
-gradients. Type-scale utilities (`.heading-page`,
-`.heading-section`, `.heading-card`, `.eyebrow`) are defined in
-`src/app/globals.css`; typed mirrors live in `src/lib/design-tokens.ts`.
-Full documentation: [`docs/design-system.md`](docs/design-system.md).
-Concept roadmap and shipped/pending designs:
-[`docs/design-concepts.md`](docs/design-concepts.md).
-
-## Deployment
-
-Connected to Vercel for CI/CD:
-
-1. Push to `main` triggers build and lint via GitHub Actions
-2. Lint + Type Check run via `npm run build`
-3. Automatic deployment to Vercel Edge Network upon success
-
 ## Useful Resources
 
 - [Next.js 16 Docs](https://nextjs.org/docs)
 - [shadcn/ui](https://ui.shadcn.com)
 - [Tailwind CSS](https://tailwindcss.com)
 - [Framer Motion](https://www.framer.com/motion/)
+- [GSAP](https://gsap.com)
 - [Recharts](https://recharts.org)
-- [Lenis (smooth scroll)](https://lenis.darkroom.engineering)
 - [ECC Repository](https://github.com/affaan-m/ECC)
 - [Context7](https://context7.com)
