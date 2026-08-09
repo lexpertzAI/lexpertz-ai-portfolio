@@ -1,6 +1,5 @@
 ---
 description: Extract patterns and learnings from current session
-agent: everything-claude-code:build
 ---
 
 # Learn Command

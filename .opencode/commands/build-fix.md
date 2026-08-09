@@ -1,7 +1,5 @@
 ---
 description: Fix build and TypeScript errors with minimal changes
-agent: everything-claude-code:build-error-resolver
-subtask: true
 ---
 
 # Build Fix Command
@@ -10,8 +8,8 @@ Fix build and TypeScript errors with minimal changes: $ARGUMENTS
 
 ## Your Task
 
-1. **Run type check**: `npx tsc --noEmit`
-2. **Collect all errors**
+1. **Run type check**: `npm run build` (the ONLY typecheck path — no `tsc --noEmit` script exists)
+2. **Collect all errors** from the build output
 3. **Fix errors one by one** with minimal changes
 4. **Verify each fix** doesn't introduce new errors
 5. **Run final check** to confirm all errors resolved
@@ -19,20 +17,20 @@ Fix build and TypeScript errors with minimal changes: $ARGUMENTS
 ## Approach
 
 ### DO:
-- PASS: Fix type errors with correct types
-- PASS: Add missing imports
-- PASS: Fix syntax errors
-- PASS: Make minimal changes
-- PASS: Preserve existing behavior
-- PASS: Run `tsc --noEmit` after each change
+- Fix type errors with correct types
+- Add missing imports
+- Fix syntax errors
+- Make minimal changes
+- Preserve existing behavior
+- Run `npm run build` after each fix
 
 ### DON'T:
-- FAIL: Refactor code
-- FAIL: Add new features
-- FAIL: Change architecture
-- FAIL: Use `any` type (unless absolutely necessary)
-- FAIL: Add `@ts-ignore` comments
-- FAIL: Change business logic
+- Refactor code
+- Add new features
+- Change architecture
+- Use `any` type (unless absolutely necessary)
+- Add `@ts-ignore` comments
+- Change business logic
 
 ## Common Error Fixes
 
@@ -47,10 +45,9 @@ Fix build and TypeScript errors with minimal changes: $ARGUMENTS
 ## Verification Steps
 
 After fixes:
-1. `npx tsc --noEmit` - should show 0 errors
-2. `npm run build` - should succeed
-3. `npm test` - tests should still pass
+1. `npm run build` - should succeed with zero errors
+2. `npm run lint` - should pass
 
 ---
 
-**IMPORTANT**: Focus on fixing errors only. No refactoring, no improvements, no architectural changes. Get the build green with minimal diff.
+**IMPORTANT**: Focus on fixing errors only. No refactoring, no improvements, no architectural changes. Get the build green with minimal diff. Never run `npm test` (no test runner installed).

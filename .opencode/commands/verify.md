@@ -1,67 +1,43 @@
 ---
-description: Run verification loop to validate implementation
-agent: everything-claude-code:build
+description: Run verification loop (build + lint)
 ---
 
 # Verify Command
 
-Run verification loop to validate the implementation: $ARGUMENTS
+Run the repo's actual validation gates for: $ARGUMENTS
 
-## Your Task
+## Repo Reality
 
-Execute comprehensive verification:
+- **No test framework — `npm test` fails. Do not run it.**
+- `npm run build` is the ONLY typecheck path.
+- `npm run lint` for linting.
 
-1. **Type Check**: `npx tsc --noEmit`
-2. **Lint**: `npm run lint`
-3. **Unit Tests**: `npm test`
-4. **Integration Tests**: `npm run test:integration` (if available)
-5. **Build**: `npm run build`
-6. **Coverage Check**: Verify 80%+ coverage
+## Verification Steps
 
-## Verification Checklist
-
-### Code Quality
-- [ ] No TypeScript errors
-- [ ] No lint warnings
-- [ ] No console.log statements
-- [ ] Functions < 50 lines
-- [ ] Files < 800 lines
-
-### Tests
-- [ ] All tests passing
-- [ ] Coverage >= 80%
-- [ ] Edge cases covered
-- [ ] Error conditions tested
-
-### Security
-- [ ] No hardcoded secrets
-- [ ] Input validation present
-- [ ] No SQL injection risks
-- [ ] No XSS vulnerabilities
-
-### Build
-- [ ] Build succeeds
-- [ ] No warnings
-- [ ] Bundle size acceptable
+1. **Build (typecheck)**: `npm run build` — must succeed, zero errors.
+2. **Lint**: `npm run lint` — must pass.
+3. **Security scan**: grep for hardcoded secrets (`sk-`, `api_key`, `password`) in touched files.
+4. **Console check**: no `console.log` statements left in `src/`.
+5. **Diff review**: `git diff --stat` — confirm only intended files changed.
+6. **Responsive check** (UI work only): visually verify ~375px and ≥1280px.
 
 ## Verification Report
 
-### Summary
-- Status: PASS: PASS / FAIL: FAIL
-- Score: X/Y checks passed
+```
+VERIFICATION REPORT
+==================
+Build:     [PASS/FAIL]
+Lint:      [PASS/FAIL]
+Secrets:   [PASS/FAIL] (X issues)
+Console:   [PASS/FAIL]
+Diff:      [X files changed]
 
-### Details
-| Check | Status | Notes |
-|-------|--------|-------|
-| TypeScript | PASS:/FAIL: | [details] |
-| Lint | PASS:/FAIL: | [details] |
-| Tests | PASS:/FAIL: | [details] |
-| Coverage | PASS:/FAIL: | XX% (target: 80%) |
-| Build | PASS:/FAIL: | [details] |
+Overall:   [READY/NOT READY]
+```
 
 ### Action Items
 [If FAIL, list what needs to be fixed]
 
 ---
 
-**NOTE**: Verification loop should be run before every commit and PR.
+**NOTE**: Run before every commit and PR. Never substitute `npx tsc --noEmit` for `npm run build`.

@@ -1,66 +1,39 @@
 ---
-description: Enforce TDD workflow with 80%+ coverage
-agent: everything-claude-code:tdd-guide
-subtask: true
+description: Run validation-driven development workflow (no test runner installed)
 ---
 
-# TDD Command
+# Validation-Driven Command
 
-Implement the following using strict test-driven development: $ARGUMENTS
+Implement the following, validating each step against the repo's real checks: $ARGUMENTS
 
-## TDD Cycle (MANDATORY)
+## Repo Validation Reality
+
+- **No test framework installed — `npm test` fails.** Do NOT run it.
+- `npm run build` is the ONLY typecheck path.
+- `npm run lint` for linting.
+- Validating a UI change also requires the responsive two-breakpoint check (~375px and ≥1280px).
+
+## Cycle (MANDATORY)
 
 ```
-RED → GREEN → REFACTOR → REPEAT
+PLAN → IMPLEMENT → VALIDATE → REFINE → REPEAT
 ```
 
-1. **RED**: Write a failing test FIRST
-2. **GREEN**: Write minimal code to pass the test
-3. **REFACTOR**: Improve code while keeping tests green
-4. **REPEAT**: Continue until feature complete
+1. **PLAN**: State the interface/behavior change and the files touched.
+2. **IMPLEMENT**: Write minimal code for the behavior.
+3. **VALIDATE**: `npm run build` (typecheck) + `npm run lint`; visually verify at both breakpoints for UI work.
+4. **REFINE**: Improve naming, remove duplication; re-validate.
+5. **REPEAT**: Continue until the feature is complete.
 
-## Your Task
+## Validation Checklist
 
-### Step 1: Define Interfaces (SCAFFOLD)
-- Define TypeScript interfaces for inputs/outputs
-- Create function signature with `throw new Error('Not implemented')`
-
-### Step 2: Write Failing Tests (RED)
-- Write tests that exercise the interface
-- Include happy path, edge cases, and error conditions
-- Run tests - verify they FAIL
-
-### Step 3: Implement Minimal Code (GREEN)
-- Write just enough code to make tests pass
-- No premature optimization
-- Run tests - verify they PASS
-
-### Step 4: Refactor (IMPROVE)
-- Extract constants, improve naming
-- Remove duplication
-- Run tests - verify they still PASS
-
-### Step 5: Check Coverage
-- Target: 80% minimum
-- 100% for critical business logic
-- Add more tests if needed
-
-## Coverage Requirements
-
-| Code Type | Minimum |
-|-----------|---------|
-| Standard code | 80% |
-| Financial calculations | 100% |
-| Authentication logic | 100% |
-| Security-critical code | 100% |
-
-## Test Types to Include
-
-- **Unit Tests**: Individual functions
-- **Edge Cases**: Empty, null, max values, boundaries
-- **Error Conditions**: Invalid inputs, network failures
-- **Integration Tests**: API endpoints, database operations
+- [ ] `npm run build` passes (typecheck)
+- [ ] `npm run lint` passes
+- [ ] No `console.log` left behind
+- [ ] Immutability respected (no `obj.x = y`, no `arr.push()`)
+- [ ] UI changes verified at ~375px and ≥1280px
+- [ ] Reduced motion gated (`prefers-reduced-motion`)
 
 ---
 
-**MANDATORY**: Tests must be written BEFORE implementation. Never skip the RED phase.
+**MANDATORY**: Never run `npm test` or `npx tsc --noEmit` — neither works in this repo. Validate only via build + lint + visual checks.

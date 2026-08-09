@@ -1,7 +1,5 @@
 ---
 description: Remove dead code and consolidate duplicates
-agent: everything-claude-code:refactor-cleaner
-subtask: true
 ---
 
 # Refactor Clean Command
@@ -10,24 +8,18 @@ Analyze and clean up the codebase: $ARGUMENTS
 
 ## Your Task
 
-1. **Detect dead code** using analysis tools
+1. **Detect dead code** using static searches (no knip/depcheck/ts-prune — not installed)
 2. **Identify duplicates** and consolidation opportunities
 3. **Safely remove** unused code with documentation
 4. **Verify** no functionality broken
 
 ## Detection Phase
 
-### Run Analysis Tools
+### Static Analysis (available tools)
 
 ```bash
-# Find unused exports
-npx knip
-
-# Find unused dependencies
-npx depcheck
-
-# Find unused TypeScript exports
-npx ts-prune
+rtk grep <function-name> src/   # find all references
+rtk grep <import-name> src/     # check import usage
 ```
 
 ### Manual Checks
@@ -38,15 +30,15 @@ npx ts-prune
 - Commented-out code
 - Unreachable code
 - Unused CSS classes
+- Files in `src/components/.old/` (never import from them)
 
 ## Removal Phase
 
 ### Before Removing
 
-1. **Search for usage** - grep, find references
-2. **Check exports** - might be used externally
-3. **Verify tests** - no test depends on it
-4. **Document removal** - git commit message
+1. **Search for usage** — `rtk grep` across `src/` for every reference
+2. **Check exports** — might be used via a barrel (`index.ts`)
+3. **Document removal** — explain in commit message
 
 ### Safe Removal Order
 
@@ -66,19 +58,17 @@ npx ts-prune
 
 ### Consolidation Strategies
 
-1. **Extract utility function** - for repeated logic
-2. **Create base class** - for similar classes
-3. **Use higher-order functions** - for repeated patterns
-4. **Create shared constants** - for magic values
+1. **Extract utility function** — for repeated logic (put in `src/lib/`)
+2. **Reuse existing primitives** — check `docs/reusable-blocks.md` before writing new components
+3. **Create shared constants** — for magic values
 
 ## Verification
 
 After cleanup:
 
-1. `npm run build` - builds successfully
-2. `npm test` - all tests pass
-3. `npm run lint` - no new lint errors
-4. Manual smoke test - features work
+1. `npm run build` - builds successfully (typecheck)
+2. `npm run lint` - no new lint errors
+3. `git diff --stat` - confirm only intended files changed
 
 ## Report Format
 
@@ -99,4 +89,4 @@ Remaining (manual review needed):
 
 ---
 
-**CAUTION**: Always verify before removing. When in doubt, ask or add `// TODO: verify usage` comment.
+**CAUTION**: Always verify before removing. When in doubt, ask or leave it. Never run `npm test` (no test runner installed).

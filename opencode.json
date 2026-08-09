@@ -1,37 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "nvidia/deepseek-ai/deepseek-v4-pro",
-  "small_model": "nvidia/stepfun-ai/step-3.7-flash",
+  "model": "deepseek/deepseek-v4-flash",
+  "small_model": "deepseek/deepseek-v4-flash",
   "default_agent": "build",
-  "provider": {
-    "headroom": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Headroom Proxy",
-      "options": {
-        "baseURL": "http://127.0.0.1:8787/v1"
-      }
-    },
-    "nvidia": {
-      "options": {
-        "timeout": 300000,
-        "chunkTimeout": 120000
-      }
-    }
-  },
   "instructions": [
     "AGENTS.md",
-    ".opencode/instructions/INSTRUCTIONS.md",
-    "skills/coding-standards/SKILL.md",
-    "skills/backend-patterns/SKILL.md",
-    "skills/frontend-patterns/SKILL.md",
-    "skills/frontend-slides/SKILL.md",
-    "skills/security-review/SKILL.md",
-    "skills/tdd-workflow/SKILL.md",
-    "skills/strategic-compact/SKILL.md",
-    "skills/eval-harness/SKILL.md",
-    "skills/verification-loop/SKILL.md",
-    "skills/api-design/SKILL.md",
-    "skills/e2e-testing/SKILL.md"
+    ".opencode/instructions/INSTRUCTIONS.md"
   ],
   "skills": {
     "paths": [
@@ -54,7 +28,6 @@
     "planner": {
       "description": "Expert planning specialist for complex features and refactoring.",
       "mode": "subagent",
-      "model": "nvidia/deepseek-ai/deepseek-v4-pro",
       "prompt": "{file:.opencode/prompts/agents/planner.txt}",
       "tools": {
         "read": true,
@@ -63,15 +36,15 @@
         "edit": false
       }
     },
-    "architect": {
-      "description": "Software architecture specialist for system design and technical decision-making.",
+    "tdd-guide": {
+      "description": "Validation-driven development specialist (no test runner installed; uses build + lint + manual checks).",
       "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/architect.txt}",
+      "prompt": "{file:.opencode/prompts/agents/tdd-guide.txt}",
       "tools": {
         "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
+        "write": true,
+        "edit": true,
+        "bash": true
       }
     },
     "code-reviewer": {
@@ -96,47 +69,10 @@
         "edit": true
       }
     },
-    "tdd-guide": {
-      "description": "Test-Driven Development specialist enforcing write-tests-first methodology.",
-      "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
-      "prompt": "{file:.opencode/prompts/agents/tdd-guide.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
     "build-error-resolver": {
       "description": "Build and TypeScript error resolution specialist.",
       "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
       "prompt": "{file:.opencode/prompts/agents/build-error-resolver.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "e2e-runner": {
-      "description": "End-to-end testing specialist using Playwright.",
-      "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
-      "prompt": "{file:.opencode/prompts/agents/e2e-runner.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "doc-updater": {
-      "description": "Documentation and codemap specialist.",
-      "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
-      "prompt": "{file:.opencode/prompts/agents/doc-updater.txt}",
       "tools": {
         "read": true,
         "write": true,
@@ -147,7 +83,6 @@
     "refactor-cleaner": {
       "description": "Dead code cleanup and consolidation specialist.",
       "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
       "prompt": "{file:.opencode/prompts/agents/refactor-cleaner.txt}",
       "tools": {
         "read": true,
@@ -156,34 +91,21 @@
         "bash": true
       }
     },
-    "docs-lookup": {
-      "description": "Documentation specialist using Context7 MCP to fetch current library and API documentation.",
+    "doc-updater": {
+      "description": "Documentation and codemap specialist.",
       "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
-      "prompt": "{file:.opencode/prompts/agents/docs-lookup.txt}",
+      "prompt": "{file:.opencode/prompts/agents/doc-updater.txt}",
       "tools": {
         "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
+        "write": true,
+        "edit": true,
+        "bash": true
       }
     },
     "harness-optimizer": {
       "description": "Analyze and improve the local agent harness configuration for reliability, cost, and throughput.",
       "mode": "subagent",
-      "model": "nvidia/deepseek-ai/deepseek-v4-flash",
       "prompt": "{file:.opencode/prompts/agents/harness-optimizer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "edit": true
-      }
-    },
-    "loop-operator": {
-      "description": "Operate autonomous agent loops and monitor progress.",
-      "mode": "subagent",
-      "model": "nvidia/stepfun-ai/step-3.7-flash",
-      "prompt": "{file:.opencode/prompts/agents/loop-operator.txt}",
       "tools": {
         "read": true,
         "bash": true,
@@ -199,7 +121,7 @@
       "subtask": true
     },
     "tdd": {
-      "description": "Enforce TDD workflow with 80%+ test coverage",
+      "description": "Run validation-driven workflow (build + lint; no test runner)",
       "template": "{file:.opencode/commands/tdd.md}\n\n$ARGUMENTS",
       "agent": "tdd-guide",
       "subtask": true
@@ -222,89 +144,11 @@
       "agent": "build-error-resolver",
       "subtask": true
     },
-    "e2e": {
-      "description": "Generate and run E2E tests with Playwright",
-      "template": "{file:.opencode/commands/e2e.md}\n\n$ARGUMENTS",
-      "agent": "e2e-runner",
-      "subtask": true
-    },
     "refactor-clean": {
       "description": "Remove dead code and consolidate duplicates",
       "template": "{file:.opencode/commands/refactor-clean.md}\n\n$ARGUMENTS",
       "agent": "refactor-cleaner",
       "subtask": true
-    },
-    "orchestrate": {
-      "description": "Orchestrate multiple agents for complex tasks",
-      "template": "{file:.opencode/commands/orchestrate.md}\n\n$ARGUMENTS",
-      "agent": "planner",
-      "subtask": true
-    },
-    "learn": {
-      "description": "Extract patterns and learnings from session",
-      "template": "{file:.opencode/commands/learn.md}\n\n$ARGUMENTS"
-    },
-    "checkpoint": {
-      "description": "Save verification state and progress",
-      "template": "{file:.opencode/commands/checkpoint.md}\n\n$ARGUMENTS"
-    },
-    "verify": {
-      "description": "Run verification loop",
-      "template": "{file:.opencode/commands/verify.md}\n\n$ARGUMENTS"
-    },
-    "eval": {
-      "description": "Run evaluation against criteria",
-      "template": "{file:.opencode/commands/eval.md}\n\n$ARGUMENTS"
-    },
-    "update-docs": {
-      "description": "Update documentation",
-      "template": "{file:.opencode/commands/update-docs.md}\n\n$ARGUMENTS",
-      "agent": "doc-updater",
-      "subtask": true
-    },
-    "update-codemaps": {
-      "description": "Update codemaps",
-      "template": "{file:.opencode/commands/update-codemaps.md}\n\n$ARGUMENTS",
-      "agent": "doc-updater",
-      "subtask": true
-    },
-    "test-coverage": {
-      "description": "Analyze test coverage",
-      "template": "{file:.opencode/commands/test-coverage.md}\n\n$ARGUMENTS",
-      "agent": "tdd-guide",
-      "subtask": true
-    },
-    "setup-pm": {
-      "description": "Configure package manager",
-      "template": "{file:.opencode/commands/setup-pm.md}\n\n$ARGUMENTS"
-    },
-    "skill-create": {
-      "description": "Generate skills from git history",
-      "template": "{file:.opencode/commands/skill-create.md}\n\n$ARGUMENTS"
-    },
-    "instinct-status": {
-      "description": "View learned instincts",
-      "template": "{file:.opencode/commands/instinct-status.md}\n\n$ARGUMENTS"
-    },
-    "instinct-import": {
-      "description": "Import instincts",
-      "template": "{file:.opencode/commands/instinct-import.md}\n\n$ARGUMENTS"
-    },
-    "instinct-export": {
-      "description": "Export instincts",
-      "template": "{file:.opencode/commands/instinct-export.md}\n\n$ARGUMENTS"
-    },
-    "evolve": {
-      "description": "Cluster instincts into skills",
-      "template": "{file:.opencode/commands/evolve.md}\n\n$ARGUMENTS"
-    },
-    "promote": {
-      "description": "Promote project instincts to global scope",
-      "template": "{file:.opencode/commands/promote.md}\n\n$ARGUMENTS"
-    },
-    "projects": {
-      "description": "List known projects and instinct stats",
-      "template": "{file:.opencode/commands/projects.md}\n\n$ARGUMENTS"
     },
     "quality-gate": {
       "description": "Run quality gate checks before merging",
@@ -312,15 +156,23 @@
       "agent": "code-reviewer",
       "subtask": true
     },
-    "loop-start": {
-      "description": "Start an autonomous agent loop",
-      "template": "{file:.opencode/commands/loop-start.md}\n\n$ARGUMENTS",
-      "agent": "loop-operator",
+    "update-docs": {
+      "description": "Update documentation",
+      "template": "{file:.opencode/commands/update-docs.md}\n\n$ARGUMENTS",
+      "agent": "doc-updater",
       "subtask": true
     },
-    "loop-status": {
-      "description": "Check status of autonomous loops",
-      "template": "{file:.opencode/commands/loop-status.md}\n\n$ARGUMENTS"
+    "verify": {
+      "description": "Run verification loop (build + lint)",
+      "template": "{file:.opencode/commands/verify.md}\n\n$ARGUMENTS"
+    },
+    "checkpoint": {
+      "description": "Save verification state and progress",
+      "template": "{file:.opencode/commands/checkpoint.md}\n\n$ARGUMENTS"
+    },
+    "learn": {
+      "description": "Extract patterns and learnings from session",
+      "template": "{file:.opencode/commands/learn.md}\n\n$ARGUMENTS"
     }
   },
   "permission": {
