@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { HeroCinematic } from "@/components/sections/hero-cinematic";
-import { EngineeredIntelligenceSection } from "@/components/sections/engineered-intelligence-section";
-import { WhatWeShipSection } from "@/components/sections/what-we-ship-section";
+import { FeaturedStatsSection } from "@/components/sections/featured-stats-section";
+import { ServicesGrid } from "@/components/sections/services-grid";
 import { ProcessSection } from "@/components/sections/process-section";
 import { TeamSection } from "@/components/sections/team-section";
 import { CaseStudiesPreview } from "@/components/sections/case-study-card";
@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <>
       <HeroCinematic />
-      <EngineeredIntelligenceSection />
-      <WhatWeShipSection />
+      <FeaturedStatsSection />
+      <ServicesGrid />
       <ProcessSection />
       <CaseStudiesPreview />
       <InsightsPreview />
