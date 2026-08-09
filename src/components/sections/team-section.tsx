@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 
 import { Section } from "@/components/ui/section";
 import { Container } from "@/components/ui/container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SlideUp } from "@/components/motion";
+import { ProfileCard } from "@/components/ui/profile-card";
 import { team } from "@/content/team";
 import { trackCTA } from "@/lib/analytics";
 
@@ -23,65 +22,29 @@ export function TeamSection() {
           <Badge variant="outline" className="w-fit">
             Who picks up the phone
           </Badge>
-          <h2 className="heading-section">
-            Built by {founder.name}.
-          </h2>
+          <h2 className="heading-section">Built by {founder.name}.</h2>
         </div>
-        <SlideUp>
-          <div className="grid items-center gap-10 md:grid-cols-[260px_1fr]">
-            <div className="relative aspect-square overflow-hidden rounded-lg border border-border">
-              <Image
-                src={founder.avatar}
-                alt={founder.name}
-                fill
-                sizes="(min-width: 768px) 260px, 100vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-            <div className="flex flex-col gap-4">
-              <p className="text-xl text-muted-foreground">{founder.bio}</p>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">{founder.role}</span>
-                {founder.socials?.github ? (
-                  <Link
-                    href={founder.socials.github}
-                    className="text-brand-cyan hover:underline"
-                    onClick={() => trackCTA("founder_github", founder.socials!.github)}
-                  >
-                    GitHub
-                  </Link>
-                ) : null}
-                {founder.socials?.linkedin ? (
-                  <Link
-                    href={founder.socials.linkedin}
-                    className="text-brand-cyan hover:underline"
-                    onClick={() => trackCTA("founder_linkedin", founder.socials!.linkedin)}
-                  >
-                    LinkedIn
-                  </Link>
-                ) : null}
-                {founder.socials?.x ? (
-                  <Link
-                    href={founder.socials.x}
-                    className="text-brand-cyan hover:underline"
-                    onClick={() => trackCTA("founder_x", founder.socials!.x)}
-                  >
-                    X
-                  </Link>
-                ) : null}
-              </div>
-              <Button asChild variant="outline" size="sm" className="w-fit">
-                <Link
-                  href="/about"
-                  onClick={() => trackCTA("team_about_link", "/about")}
-                >
-                  Read the full story →
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </SlideUp>
+
+        <ProfileCard
+          name={founder.name}
+          title={founder.role}
+          description={founder.bio}
+          imageUrl={founder.avatar}
+          githubUrl={founder.socials?.github}
+          twitterUrl={founder.socials?.x}
+          linkedinUrl={founder.socials?.linkedin}
+        />
+
+        <div className="mt-10 flex justify-center">
+          <Button asChild variant="outline" size="sm">
+            <Link
+              href="/about"
+              onClick={() => trackCTA("team_about_link", "/about")}
+            >
+              Read the full story →
+            </Link>
+          </Button>
+        </div>
       </Container>
     </Section>
   );

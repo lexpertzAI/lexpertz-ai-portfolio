@@ -83,14 +83,15 @@ The old `process-timeline.tsx` was replaced by a server component
   collapse and cards to overlap the next section — always pass a real
   pixel/`svh` value to the height prop.
 
-### 5. TeamSection — Founder Anchor 🔲
+### 5. TeamSection — Founder Anchor ✅
 
-**Why:** single `SlideUp` only; the founder is the brand anchor.
-
-**Concept:** interactive expertise tags (physics, ML, quant) + scroll-reveal
-bio chunks or a radial skill chart echoing the growth-chart aesthetic.
-
-**New primitive:** `RadialProgress` (ui).
+| | |
+|---|---|
+| Concept | Replace the single `SlideUp` founder grid with the dropped `ProfileCard` concept: overlapping photo + info card on desktop, stacked centered card on mobile, circular social icon row. |
+| Behavior | `ProfileCard` (ui) driven by `team[0]` content (name, role, bio, `/founder.jpg`, socials — X maps to the Twitter icon; missing socials are filtered out). Keeps the "Read the full story →" `/about` CTA below the card. |
+| Notes | `motion.div` → `m.div` for LazyMotion strict (domMax); `plus.unsplash.com` added to `next.config.mjs` remotePatterns for the primitive's default image. |
+| Files | `src/components/ui/profile-card.tsx` · `src/components/sections/team-section.tsx` |
+| Commit | current |
 
 ### 6. InsightsPreview — Case-Study Cards 🔲
 
@@ -132,7 +133,7 @@ field-level motion using existing motion tokens.
 | 2 | Featured Stats Section | — | ✅ Shipped |
 | 3 | ServicesGrid card interaction | Tier 1 | ✅ Shipped |
 | 4 | ProcessSteps (replaces ProcessTimeline) | — | ✅ Shipped |
-| 5 | TeamSection founder anchor | Tier 2 | 🔲 Pending |
+| 5 | TeamSection founder anchor | Tier 2 | ✅ Shipped |
 | 6 | InsightsPreview case cards | Tier 2 | 🔲 Pending |
 | 7 | CTASection entrance | Tier 2 | 🔲 Pending |
 | 8 | ContactForm polish | Tier 3 | 🔲 Pending |
@@ -141,3 +142,6 @@ field-level motion using existing motion tokens.
 (pick ✅ / 🔲 / 📋 / ❌), fill the "Concept / Behavior / Files" table, and add
 a row to the Roadmap. Keep this file in sync when a PR ships — update status
 to ✅ with the commit hash.
+
+**Reusable blocks:** shipped primitives and their call sites are cataloged in
+`docs/reusable-blocks.md` — check it before building any new page block.

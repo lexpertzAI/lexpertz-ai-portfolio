@@ -30,6 +30,24 @@ No test framework is installed — `npm test` will fail. `npm run build` is the 
 - **Barrel exports:** Each module dir has `index.ts` re-exporting public API.
 - **Stale code:** `src/components/.old/` — do not import from.
 
+### Reusability Mandate (MANDATORY)
+
+Before writing any new section or page block, check
+`docs/reusable-blocks.md` — if a primitive already does it, **reuse it**.
+Prefer composition over rewriting.
+
+- When you build a component from scratch that could be reused anywhere else,
+  ship it as a **generic primitive**: `src/components/ui/` for UI, `src/
+  components/motion/` for motion, exported from the dir barrel, with content
+  driven from `src/content/*` (never inline page data).
+- Page sections in `src/components/sections/` are thin wrappers that compose
+  primitives + content (`CTASection`, `TeamSection`, the `/about` page are the
+  reference examples).
+- When a page matches a shipped block (profile, stats, process/steps, CTA,
+  card stack, proof metric), reuse the block — do not hand-roll a variant.
+- Keep `docs/reusable-blocks.md` in sync when a primitive ships or gains a new
+  call site.
+
 ### MCP Available
 
 - **shadcn** — add components

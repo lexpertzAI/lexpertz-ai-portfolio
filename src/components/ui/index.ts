@@ -46,3 +46,4 @@ export { Section } from "./section";
 export { StatCard } from "./stat-card";
 export { GrowthChart } from "./growth-chart";
 export { ContainerScroll, CardSticky } from "./cards-stack";
+export { ProfileCard, type ProfileCardProps } from "./profile-card";
