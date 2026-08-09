@@ -41,18 +41,31 @@ visual identity, semantic tokens, layered motion, clean composition).
 
 ## Pending
 
-### 3. ServicesGrid — Signature Card Interaction 🔲
+### 3. ServicesGrid — Cards-Stack Concept ✅
 
-**Why:** currently generic `BentoCard` + `TiltCard`. Five services are the core
-value prop and deserve a distinctive interaction like the hero's flip-cards.
+**Why:** the flat `BentoCard` + `TiltCard` grid read as generic tiles. The
+dropped cards-stack concept (Work panel) was applied verbatim: a scroll-pinned
+indigo card stack with title + deliverable chips. No photos — each card renders
+a spec-card SVG built from the service content (title, tagline, deliverables,
+duration) in the concept's palette.
 
-**Concept:** `ServiceCard` primitive with hover flip (front: title + summary →
-back: tech stack, deliverables, timeline). Optional scroll-linked entrance
-(spring stagger) or a shared animated mesh background tying into the hero's
-aesthetic.
+**Implementation notes:**
+- Primitive is the dropped code as-is (`motion.div` → `m.div` for LazyMotion
+  strict; `layout="position"` requires `domMax`, so `MotionProvider` now loads
+  `domMax` instead of `domAnimation`).
+- Laptop layout is two-block (the concept's Process pattern): sticky headline
+  column on the left (`md:sticky md:top-16 md:h-[calc(100svh-4rem)]`), card
+  stack scrolling on the right. Mobile is a single column.
+- Cards carry the full service content (title, duration, tagline, summary,
+  deliverables check-list) plus a slim decorative spec-card SVG strip.
+- Cards are `position: sticky` at every breakpoint (concept behavior) with
+  `top: index * 60` and `translateZ(index * 5)` under the 1000px perspective;
+  `space-y-[40vh] md:space-y-[65vh]` keeps each card readable before the next
+  pins over it.
+- The featured-stats section (statbar) is untouched and remains on the homepage.
 
-**New primitive:** `ServiceCard` (ui) → replaces `BentoCard` + `TiltCard`
-in `sections/services-grid.tsx`.
+**Files:** `src/components/ui/cards-stack.tsx` ·
+`src/components/sections/services-grid.tsx`
 
 ~~### 4. ProcessTimeline — Living Pipeline~~ ❌ Dropped (superseded)
 
@@ -117,7 +130,7 @@ field-level motion using existing motion tokens.
 |---|---------|----------|--------|
 | 1 | Cinematic Hero | — | ✅ Shipped |
 | 2 | Featured Stats Section | — | ✅ Shipped |
-| 3 | ServicesGrid card interaction | Tier 1 | 🔲 Pending |
+| 3 | ServicesGrid card interaction | Tier 1 | ✅ Shipped |
 | 4 | ProcessSteps (replaces ProcessTimeline) | — | ✅ Shipped |
 | 5 | TeamSection founder anchor | Tier 2 | 🔲 Pending |
 | 6 | InsightsPreview case cards | Tier 2 | 🔲 Pending |
