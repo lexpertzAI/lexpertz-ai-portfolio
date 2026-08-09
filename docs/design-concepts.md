@@ -37,24 +37,31 @@ visual identity, semantic tokens, layered motion, clean composition).
 | Files | `src/components/ui/growth-chart.tsx` · `src/components/sections/featured-stats-section.tsx` · `src/content/featured-stats.ts` |
 | Commit | `80ee2f8` |
 
+### 3. Cards-Stack Scroll Sections ✅
+
+| | |
+|---|---|
+| Concept | Replace the flat bento grid ("What we ship") and stats strip ("Engineered Intelligence") with a scroll-pinned sticky card stack — the cards-stack pattern from the design concept. |
+| Behavior | Desktop: cards pin at growing `top` offsets and recede in depth (`translateZ` under a 1000px `perspective`). Mobile + reduced-motion: static vertical stack. Pure CSS sticky — no Framer layout projection, stays inside `LazyMotion strict` + `domAnimation`. |
+| Content | `src/content/what-we-ship.ts` (5 service cards, each linking to its spec page) · `src/content/engineered-intelligence.ts` (4 brand-tinted stat cards). |
+| Files | `src/components/ui/cards-stack.tsx` (primitive) · `src/components/sections/what-we-ship-section.tsx` · `src/components/sections/engineered-intelligence-section.tsx` |
+| Notes | Lessons applied: real inline `minHeight` in `svh` (#2/#6), inline offsets gated behind `useMediaGreaterThan("md")` (#4), `useReducedMotion` static fallback (#8). Rotation on stat cards is desktop-only. |
+| Commit | current |
+
 ---
 
 ## Pending
 
-### 3. ServicesGrid — Signature Card Interaction 🔲
+### 4. ServicesGrid — Signature Card Interaction ❌ Dropped (superseded)
 
-**Why:** currently generic `BentoCard` + `TiltCard`. Five services are the core
-value prop and deserve a distinctive interaction like the hero's flip-cards.
+**Why:** the bento grid was replaced by the cards-stack "What we ship" section
+(entry #3) — five scroll-pinned service cards, each linking to its spec page.
+The old `services-grid.tsx` / `featured-stats-section.tsx` were moved to
+`src/components/.old/`; the `GrowthChart` primitive and
+`src/content/featured-stats.ts` (its `ChartPoint` type source) remain live for
+detail pages.
 
-**Concept:** `ServiceCard` primitive with hover flip (front: title + summary →
-back: tech stack, deliverables, timeline). Optional scroll-linked entrance
-(spring stagger) or a shared animated mesh background tying into the hero's
-aesthetic.
-
-**New primitive:** `ServiceCard` (ui) → replaces `BentoCard` + `TiltCard`
-in `sections/services-grid.tsx`.
-
-~~### 4. ProcessTimeline — Living Pipeline~~ ❌ Dropped (superseded)
+~~### 5. ProcessTimeline — Living Pipeline~~ ❌ Dropped (superseded)
 
 The old `process-timeline.tsx` was replaced by a server component
 `process-section.tsx` wrapping the reusable `ProcessSteps` primitive
@@ -69,8 +76,7 @@ The old `process-timeline.tsx` was replaced by a server component
   unused `--md-height` custom property previously caused the container to
   collapse and cards to overlap the next section — always pass a real
   pixel/`svh` value to the height prop.
-
-### 5. TeamSection — Founder Anchor 🔲
+### 6. TeamSection — Founder Anchor 🔲
 
 **Why:** single `SlideUp` only; the founder is the brand anchor.
 
@@ -79,21 +85,21 @@ bio chunks or a radial skill chart echoing the growth-chart aesthetic.
 
 **New primitive:** `RadialProgress` (ui).
 
-### 6. InsightsPreview — Case-Study Cards 🔲
+### 7. InsightsPreview — Case-Study Cards 🔲
 
 **Why:** flat `glow-border` cards; read as generic blog tiles.
 
 **Concept:** hover reveals a "problem → approach → result" triple; category
 color coding; optional reading-progress ring.
 
-### 7. CTASection — Entrance Choreography 🔲
+### 8. CTASection — Entrance Choreography 🔲
 
 **Why:** uses the hero gradient but has no scroll-triggered entrance.
 
 **Concept:** materialize on scroll (opacity + scale + gradient sweep) synced
 with the hero's scroll-release handoff.
 
-### 8. ContactForm — Interaction Polish 🔲
+### 9. ContactForm — Interaction Polish 🔲
 
 **Why:** functional but static.
 
@@ -117,7 +123,7 @@ field-level motion using existing motion tokens.
 |---|---------|----------|--------|
 | 1 | Cinematic Hero | — | ✅ Shipped |
 | 2 | Featured Stats Section | — | ✅ Shipped |
-| 3 | ServicesGrid card interaction | Tier 1 | 🔲 Pending |
+| 3 | Cards-Stack scroll sections | Tier 1 | ✅ Shipped |
 | 4 | ProcessSteps (replaces ProcessTimeline) | — | ✅ Shipped |
 | 5 | TeamSection founder anchor | Tier 2 | 🔲 Pending |
 | 6 | InsightsPreview case cards | Tier 2 | 🔲 Pending |

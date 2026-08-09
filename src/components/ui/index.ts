@@ -45,3 +45,4 @@ export { Container } from "./container";
 export { Section } from "./section";
 export { StatCard } from "./stat-card";
 export { GrowthChart } from "./growth-chart";
+export { ContainerScroll, CardSticky } from "./cards-stack";
