@@ -21,6 +21,7 @@ stack, or proof metric — one of these blocks already does it. Reuse it.
 | **GrowthChart** | `ui/growth-chart.tsx` | `data: ChartPoint[], gradientId?` — brand-gradient recharts area chart | Homepage statbar only (signature — avoid duplicating) | `/products/axiom-verify` growth, case-study trend lines |
 | **BentoCard** | `ui/bento-card.tsx` | `asChild?` + children — neon hover-glow tile | Homepage case-study cards · `/about` tenet tiles | Any feature grid |
 | **StatCard + CountUp** | `ui/stat-card.tsx` + `motion/count-up.tsx` | CountUp: `value, decimals?, prefix?, suffix?` — viewport-triggered count, SSR-safe, reduced-motion aware | `/about` proof strip | Homepage statbar, product KPIs |
+| **AnimatedRoadmap** | `ui/animated-roadmap.tsx` | `milestones: Milestone[] {id, name, status, position}`, `mapImageSrc` — map backdrop + scroll-drawn route; desktop map with positioned markers, mobile vertical rail; reduced-motion static | Homepage `CTASection` | Product launch roadmaps, `/services/[slug]` engagement plans |
 | **Section / Container / Badge / Button** | `ui/*` | Standard section rhythm, width constraint, eyebrow, CTAs | Everywhere | Everywhere |
 
 ## Motion primitives (`src/components/motion/`)

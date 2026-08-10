@@ -100,12 +100,32 @@ The old `process-timeline.tsx` was replaced by a server component
 **Concept:** hover reveals a "problem → approach → result" triple; category
 color coding; optional reading-progress ring.
 
-### 7. CTASection — Entrance Choreography 🔲
+### 7. CTASection — Roadmap CTA ✅
 
-**Why:** uses the hero gradient but has no scroll-triggered entrance.
+**Why:** the old CTA reused the hero gradient but had no scroll-triggered
+entrance or distinctive visual. Concept #7 (entrance choreography) shipped as
+a full redesign: brand copy + CTAs on top, `AnimatedRoadmap` below — a map
+backdrop with a scroll-drawn route line and staggered milestone markers.
 
-**Concept:** materialize on scroll (opacity + scale + gradient sweep) synced
-with the hero's scroll-release handoff.
+**Implementation notes:**
+- `AnimatedRoadmap` (ui) is a generic primitive: `milestones` + `mapImageSrc`
+  props, driven from `src/content/roadmap.ts` (mirrors the process phases with
+  editorial statuses). Exported from the ui barrel.
+- Desktop (`md+`): scroll-linked `pathLength` route draw (`useScroll` +
+  `useTransform`), map + markers absolutely positioned inside
+  `md:h-[400px]` (contained — no paint leak). Mobile: vertical milestone rail,
+  map/path hidden (`hidden md:block`).
+- `m.div`/`m.path` under LazyMotion strict (domMax). `useReducedMotion`
+  (repo hook) draws the route fully and skips entrances; the `animate-pulse`
+  on the in-progress dot is killed by the global reduced-motion block.
+- Status dots use repo tokens: `success` (complete), `brand-blue`
+  (in-progress), `muted`/`border` (pending). Map is `next/image` from
+  `images.unsplash.com` (already whitelisted — no config change).
+- Headline + CTAs get a staggered entrance via `StaggerContainer`/`StaggerItem`
+  (reuse); both CTAs keep `trackCTA`.
+
+**Files:** `src/components/ui/animated-roadmap.tsx` ·
+`src/components/sections/cta-section.tsx` · `src/content/roadmap.ts`
 
 ### 8. ContactForm — Interaction Polish 🔲
 
@@ -135,7 +155,7 @@ field-level motion using existing motion tokens.
 | 4 | ProcessSteps (replaces ProcessTimeline) | — | ✅ Shipped |
 | 5 | TeamSection founder anchor | Tier 2 | ✅ Shipped |
 | 6 | InsightsPreview case cards | Tier 2 | 🔲 Pending |
-| 7 | CTASection entrance | Tier 2 | 🔲 Pending |
+| 7 | CTASection roadmap CTA | Tier 2 | ✅ Shipped |
 | 8 | ContactForm polish | Tier 3 | 🔲 Pending |
 
 **How to add a concept:** append a numbered entry to its status section

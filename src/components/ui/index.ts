@@ -47,3 +47,9 @@ export { StatCard } from "./stat-card";
 export { GrowthChart } from "./growth-chart";
 export { ContainerScroll, CardSticky } from "./cards-stack";
 export { ProfileCard, type ProfileCardProps } from "./profile-card";
+export {
+  AnimatedRoadmap,
+  type AnimatedRoadmapProps,
+  type Milestone,
+  type MilestoneStatus,
+} from "./animated-roadmap";
