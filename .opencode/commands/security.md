@@ -1,8 +1,8 @@
 ---
-description: Run comprehensive security review
-subtask: true
+description: "Run comprehensive security review"
+agent: security-reviewer
+subagent: true
 ---
-
 # Security Review Command
 
 Conduct a comprehensive security review: $ARGUMENTS

@@ -1,3 +1,8 @@
+---
+description: "Run quality gate checks before merging"
+agent: code-reviewer
+subagent: true
+---
 # Quality Gate Command
 
 Run the ECC quality pipeline on demand for a file or project scope.

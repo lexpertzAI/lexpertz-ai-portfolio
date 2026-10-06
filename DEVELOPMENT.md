@@ -32,56 +32,52 @@ npm run build
 
 ## Agent Harness (ECC)
 
-This project uses [ECC](https://github.com/affaan-m/ECC) — an agent harness optimization system that provides skills, agents, commands, hooks, and security scanning.
+This project uses [ECC](https://github.com/affaan-m/ECC) — an agent harness that provides skills, agents, and commands. This repo targets **OpenCode V2** (`opencode@2.x`) and uses only native V2 discovery.
 
 ### How ECC Is Installed
 
 ECC is installed **as committed repo files**, not as a global tool or npm package:
 
-| Path | Contents |
-|---|---|
-| `.opencode/plugins/` | Plugin entry (`ecc-hooks.ts`) + changed-files store — auto-loaded by OpenCode |
-| `.opencode/tools/` | Custom tools (`changed-files`, `dependency-analyzer`, etc.) |
-| `.opencode/prompts/` | Subagent prompts |
-| `.opencode/commands/` | Slash command templates |
-| `skills/` | Skill definitions (SKILL.md) loaded via `opencode.json` |
-| `opencode.json` | Plugin wiring, agents, commands, skills, MCP config |
-
-OpenCode auto-scans `.opencode/plugins/*.{ts,js}` and loads each file as a plugin — there is **no** `plugin:` config entry and no `npm install ecc-universal` needed. The plugin's `@opencode-ai/plugin` SDK import resolves against the SDK bundled with OpenCode itself.
-
-### Verifying ECC Is Loaded
-
-```bash
-# Redirect to a file — piping truncates the output at the 64KB pipe buffer,
-# so grepping for ecc-hooks.ts through a pipe will falsely report it missing.
-opencode debug config > /tmp/ecc-check.json 2>/dev/null
-grep -q 'ecc-hooks.ts' /tmp/ecc-check.json && echo 'ECC plugin OK' || echo 'ECC plugin MISSING'
-```
-
-In the output, `plugin` and `plugin_origins` must list `ecc-hooks.ts` (scope: local). On a fresh session, the `session.created` hook logs `[ECC] Session started`.
-
-### Hook Profile & Tuning
-
-The ECC plugin behavior is controlled by two environment variables:
-
-| Variable | Values | Effect |
+| Path | Contents | Discovery |
 |---|---|---|
-| `ECC_HOOK_PROFILE` | `minimal`, `standard` (default), `strict` | Higher profiles enable more hooks — e.g. auto-format on edit and `tsc --noEmit` after edits only run under `strict`; console.log warnings run from `standard` |
-| `ECC_DISABLED_HOOKS` | comma-separated hook IDs | Disable specific hooks, e.g. `post:edit:console-warn,pre:write:doc-file-warning` |
+| `.opencode/skills/` | Skills (`<id>/SKILL.md`) | auto |
+| `.opencode/agents/` | Subagents (`<id>.md`) | auto |
+| `.opencode/commands/` | Slash commands (`<id>.md`) | auto |
+| `skills/` | Skills (repo root) | listed in `opencode.json` |
+| `opencode.json` | Model, agent overrides, skill paths, MCP, permissions |
 
-### Building / Type-Checking the Plugin
+There is no plugin and no build step. V2 changed the plugin API outright, so the upstream ECC plugin (and the custom tools it registered) do not run here — see [Why no plugin](#why-no-plugin).
 
-The plugin has its own package manifest under `.opencode/` (for `tsc`-level type-checking of the hooks and tools — **not** needed at runtime, since OpenCode bundles the SDK):
+### Verifying Skills Are Loaded
 
 ```bash
-cd .opencode && npm install && npm run build
+opencode mcp list          # MCP connection state
+opencode api get /api/skill # note: reports the service's default directory, not the cwd
 ```
 
-The compiled output goes to the gitignored `.opencode/dist/`.
+`/api/skill` is unreliable for this check — it ignores the `location` query parameter and returns the service's default directory. To verify a specific skill, load it directly in a session with the `skill` tool (e.g. ask for `@coding-standards`) and confirm the reported base directory matches the skill's path.
 
 ### Adding ECC Skills
 
-To add a skill, copy its directory into `skills/` and append the `SKILL.md` path to the `instructions` array in `opencode.json`.
+To add a skill, copy its directory into `skills/` or `.opencode/skills/`. Both work as-is: `.opencode/skills/` is a default discovery path, and `skills/` is registered once in `opencode.json`. No further config is needed.
+
+```markdown
+---
+name: my-skill
+description: When the model should reach for this
+---
+```
+
+The `description` is the only part advertised up front; the model loads the body when relevant. A skill with no description is never advertised. The skill ID is the path-derived directory name, not the frontmatter `name`.
+
+### Why no plugin
+
+The upstream ECC distribution ships `plugins/` and `tools/`. Neither is installed:
+
+- **Plugin** — V1 plugin code does not execute under V2. The old SDK import (`@opencode-ai/plugin`) is also gone; V2 uses `@opencode/plugin` and a `Plugin.define({ id, setup(ctx) })` entrypoint. Loading the old plugin only produced a "failed to load plugin" warning. Its hooks (auto-format, typecheck-after-edit, console.log audit, secret checks) duplicated rules already written into `AGENTS.md`.
+- **Custom tools** — `changed-files`, `dependency-analyzer`, `run-tests`, `lint-check`, `format-code`, `git-summary`, `security-audit`, and `check-coverage` were only reachable through that plugin. Several just returned a command string that `npm run lint` / `npm run build` already provide.
+
+To reintroduce them, port the plugin per <https://opencode.ai/v2/docs/build/plugins/migrate-v1/>: register tools through `ctx.tool.transform` with JSON Schema `input` and a `{ content }` return value.
 
 ### Available Commands
 
@@ -92,44 +88,31 @@ To add a skill, copy its directory into `skills/` and append the `SKILL.md` path
 | `/code-review` | code-reviewer | Review code for quality, security, maintainability |
 | `/security` | security-reviewer | Comprehensive security review |
 | `/build-fix` | build-error-resolver | Fix build and TypeScript errors |
-| `/e2e` | e2e-runner | Generate and run E2E tests |
 | `/refactor-clean` | refactor-cleaner | Remove dead code and consolidate duplicates |
-| `/orchestrate` | planner | Multi-agent orchestration for complex tasks |
 | `/verify` | — | Run verification loop (build, types, lint, tests) |
 | `/quality-gate` | code-reviewer | Run ECC quality pipeline on a file or project |
-| `/test-coverage` | tdd-guide | Analyze and improve test coverage |
 | `/update-docs` | doc-updater | Update documentation |
-| `/update-codemaps` | doc-updater | Update codemaps |
-| `/loop-start` | loop-operator | Start a managed autonomous agent loop |
-| `/loop-status` | — | Inspect active loop state |
 | `/learn` | — | Extract patterns and learnings from session |
 | `/checkpoint` | — | Save verification state and progress |
-| `/eval` | — | Run evaluation against criteria |
-| `/setup-pm` | — | Configure package manager preference |
-| `/skill-create` | — | Generate skills from git history |
 
 ### Available Agents
 
-Only the agents defined in `opencode.json` are registered:
+Registered from `.opencode/agents/`:
 
-- **planner** — Implementation planning for complex features
-- **architect** — System design and architectural decisions
-- **code-reviewer** — Code quality, security, and maintainability review
+- **planner** — Implementation planning for complex features (read-only)
+- **code-reviewer** — Code quality, security, and maintainability review (read-only)
 - **security-reviewer** — Security vulnerability detection and remediation
 - **tdd-guide** — Test-driven development workflow enforcement
 - **build-error-resolver** — Build and TypeScript error resolution
-- **e2e-runner** — End-to-end testing with Playwright
-- **doc-updater** — Documentation and codemap updates
-- **docs-lookup** — Documentation specialist using Context7 MCP
 - **refactor-cleaner** — Dead code cleanup and consolidation
+- **doc-updater** — Documentation and codemap updates
 - **harness-optimizer** — Agent harness configuration optimization
-- **loop-operator** — Autonomous agent loop operation
 
-Agents from the ECC catalog (e.g. `database-reviewer`, `go-reviewer`) are **not** registered unless added to `opencode.json` with a matching prompt file in `.opencode/prompts/agents/`.
+To add an ECC catalog agent (e.g. `database-reviewer`, `go-reviewer`), drop its Markdown file into `.opencode/agents/`. V1 used a separate prompt file under `.opencode/prompts/`; V2 uses the agent file's body as the system prompt, so there is no second file to maintain.
 
 ### Available Skills
 
-Skills are loaded automatically. The 11 installed skills are:
+From `skills/`:
 - `coding-standards` — Naming, readability, immutability, code quality
 - `api-design` — REST conventions, validation, response formats
 - `backend-patterns` — Repository/service layers, backend architecture
@@ -142,7 +125,9 @@ Skills are loaded automatically. The 11 installed skills are:
 - `eval-harness` — Eval-driven development framework
 - `strategic-compact` — Context-compaction guidance
 
-To add a skill: copy its directory into `skills/` and append the `SKILL.md` path to the `instructions` array in `opencode.json`.
+From `.opencode/skills/`: `defuddle`, `graphify`, `json-canvas`, `obsidian-bases`, `obsidian-cli`, `obsidian-markdown`.
+
+To add one, copy the directory into either location. See [Adding ECC Skills](#adding-ecc-skills).
 
 ## Codespaces / Dev Container
 
@@ -153,7 +138,8 @@ The repo ships a `.devcontainer/devcontainer.json` so a fresh GitHub Codespace i
 1. `npm install -g ctx7 opencode-ai` — global tools
 2. Install + init `rtk`
 3. `npm install` — project dependencies
-4. Verification — `opencode debug config` must show `ecc-hooks.ts`; prints `ECC plugin OK` / `ECC plugin MISSING`
+
+Nothing to verify at build time — skills, agents, and commands are plain files with no plugin or build step.
 
 **Package manager:** npm everywhere (CI, devcontainer, local). `pnpm` is intentionally not used — the project is a single-package Next.js app on Vercel, and CI already caches `npm`, so a pnpm lockfile would add migration cost for no benefit.
 

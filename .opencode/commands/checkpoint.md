@@ -1,7 +1,6 @@
 ---
-description: Save verification state and progress checkpoint
+description: "Save verification state and progress"
 ---
-
 # Checkpoint Command
 
 Save current verification state and create progress checkpoint: $ARGUMENTS

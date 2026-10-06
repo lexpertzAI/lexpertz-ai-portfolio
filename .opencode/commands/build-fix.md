@@ -1,7 +1,8 @@
 ---
-description: Fix build and TypeScript errors with minimal changes
+description: "Fix build and TypeScript errors with minimal changes"
+agent: build-error-resolver
+subagent: true
 ---
-
 # Build Fix Command
 
 Fix build and TypeScript errors with minimal changes: $ARGUMENTS

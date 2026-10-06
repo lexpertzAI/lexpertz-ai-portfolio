@@ -1,200 +1,26 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "deepseek/deepseek-v4-flash",
-  "small_model": "deepseek/deepseek-v4-flash",
   "default_agent": "build",
-  "instructions": [
-    "AGENTS.md",
-    ".opencode/instructions/INSTRUCTIONS.md"
+  "agents": {
+    "title": {
+      "model": "deepseek/deepseek-v4-flash"
+    }
+  },
+  "skills": ["skills"],
+  "permissions": [
+    {
+      "action": "context7_*",
+      "resource": "*",
+      "effect": "ask"
+    }
   ],
-  "skills": {
-    "paths": [
-      "skills",
-      ".opencode/skills"
-    ]
-  },
-  "agent": {
-    "build": {
-      "description": "Primary coding agent for Next.js, React, and Tailwind development work.",
-      "mode": "primary",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true,
-        "read": true,
-        "changed-files": true
-      }
-    },
-    "planner": {
-      "description": "Expert planning specialist for complex features and refactoring.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/planner.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
-      }
-    },
-    "tdd-guide": {
-      "description": "Validation-driven development specialist (no test runner installed; uses build + lint + manual checks).",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/tdd-guide.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "code-reviewer": {
-      "description": "Expert code review specialist for quality, security, and maintainability.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/code-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
-      }
-    },
-    "security-reviewer": {
-      "description": "Security vulnerability detection and remediation specialist.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/security-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": true,
-        "edit": true
-      }
-    },
-    "build-error-resolver": {
-      "description": "Build and TypeScript error resolution specialist.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/build-error-resolver.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "refactor-cleaner": {
-      "description": "Dead code cleanup and consolidation specialist.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/refactor-cleaner.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "doc-updater": {
-      "description": "Documentation and codemap specialist.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/doc-updater.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "harness-optimizer": {
-      "description": "Analyze and improve the local agent harness configuration for reliability, cost, and throughput.",
-      "mode": "subagent",
-      "prompt": "{file:.opencode/prompts/agents/harness-optimizer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "edit": true
-      }
-    }
-  },
-  "command": {
-    "plan": {
-      "description": "Create a detailed implementation plan for complex features",
-      "template": "{file:.opencode/commands/plan.md}\n\n$ARGUMENTS",
-      "agent": "planner",
-      "subtask": true
-    },
-    "tdd": {
-      "description": "Run validation-driven workflow (build + lint; no test runner)",
-      "template": "{file:.opencode/commands/tdd.md}\n\n$ARGUMENTS",
-      "agent": "tdd-guide",
-      "subtask": true
-    },
-    "code-review": {
-      "description": "Review code for quality, security, and maintainability",
-      "template": "{file:.opencode/commands/code-review.md}\n\n$ARGUMENTS",
-      "agent": "code-reviewer",
-      "subtask": true
-    },
-    "security": {
-      "description": "Run comprehensive security review",
-      "template": "{file:.opencode/commands/security.md}\n\n$ARGUMENTS",
-      "agent": "security-reviewer",
-      "subtask": true
-    },
-    "build-fix": {
-      "description": "Fix build and TypeScript errors with minimal changes",
-      "template": "{file:.opencode/commands/build-fix.md}\n\n$ARGUMENTS",
-      "agent": "build-error-resolver",
-      "subtask": true
-    },
-    "refactor-clean": {
-      "description": "Remove dead code and consolidate duplicates",
-      "template": "{file:.opencode/commands/refactor-clean.md}\n\n$ARGUMENTS",
-      "agent": "refactor-cleaner",
-      "subtask": true
-    },
-    "quality-gate": {
-      "description": "Run quality gate checks before merging",
-      "template": "{file:.opencode/commands/quality-gate.md}\n\n$ARGUMENTS",
-      "agent": "code-reviewer",
-      "subtask": true
-    },
-    "update-docs": {
-      "description": "Update documentation",
-      "template": "{file:.opencode/commands/update-docs.md}\n\n$ARGUMENTS",
-      "agent": "doc-updater",
-      "subtask": true
-    },
-    "verify": {
-      "description": "Run verification loop (build + lint)",
-      "template": "{file:.opencode/commands/verify.md}\n\n$ARGUMENTS"
-    },
-    "checkpoint": {
-      "description": "Save verification state and progress",
-      "template": "{file:.opencode/commands/checkpoint.md}\n\n$ARGUMENTS"
-    },
-    "learn": {
-      "description": "Extract patterns and learnings from session",
-      "template": "{file:.opencode/commands/learn.md}\n\n$ARGUMENTS"
-    }
-  },
-  "permission": {
-    "mcp_*": "ask"
-  },
   "mcp": {
-    "shadcn": {
-      "type": "local",
-      "command": [
-        "npx",
-        "shadcn@latest",
-        "mcp"
-      ],
-      "enabled": true
-    },
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-      "enabled": true,
-      "oauth": false,
-      "headers": {
-        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+    "servers": {
+      "shadcn": {
+        "type": "local",
+        "command": ["npx", "-y", "shadcn@latest", "mcp"],
+        "disabled": true
       }
     }
   }

@@ -1,8 +1,8 @@
 ---
-description: Update documentation for recent changes
-subtask: true
+description: "Update documentation"
+agent: doc-updater
+subagent: true
 ---
-
 # Update Docs Command
 
 Update documentation to reflect recent changes: $ARGUMENTS

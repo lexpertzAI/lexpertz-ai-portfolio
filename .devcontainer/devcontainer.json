@@ -52,7 +52,7 @@
       }
     }
   },
-  "postCreateCommand": "npm install -g ctx7 opencode-ai && (curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/master/install.sh | sh || true) && (rtk init -g --opencode || true) && npm install && (opencode debug config > /tmp/ecc-check.json 2>/dev/null && grep -q 'ecc-hooks.ts' /tmp/ecc-check.json && echo 'ECC plugin OK' || echo 'ECC plugin MISSING')",
+  "postCreateCommand": "npm install -g ctx7 opencode-ai && (curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/master/install.sh | sh || true) && (rtk init -g --opencode || true) && npm install",
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": {

@@ -1,7 +1,8 @@
 ---
-description: Run validation-driven development workflow (no test runner installed)
+description: "Run validation-driven workflow (build + lint; no test runner)"
+agent: tdd-guide
+subagent: true
 ---
-
 # Validation-Driven Command
 
 Implement the following, validating each step against the repo's real checks: $ARGUMENTS

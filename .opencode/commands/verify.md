@@ -1,7 +1,6 @@
 ---
-description: Run verification loop (build + lint)
+description: "Run verification loop (build + lint)"
 ---
-
 # Verify Command
 
 Run the repo's actual validation gates for: $ARGUMENTS

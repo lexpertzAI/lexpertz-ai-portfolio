@@ -1,7 +1,6 @@
 ---
-description: Extract patterns and learnings from current session
+description: "Extract patterns and learnings from session"
 ---
-
 # Learn Command
 
 Extract patterns, learnings, and reusable insights from the current session: $ARGUMENTS

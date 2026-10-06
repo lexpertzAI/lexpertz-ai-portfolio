@@ -1,8 +1,8 @@
 ---
-description: Create implementation plan with risk assessment
-subtask: true
+description: "Create a detailed implementation plan for complex features"
+agent: planner
+subagent: true
 ---
-
 # Plan Command
 
 Create a detailed implementation plan for: $ARGUMENTS

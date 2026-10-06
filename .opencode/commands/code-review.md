@@ -1,8 +1,8 @@
 ---
-description: Review code for quality, security, and maintainability
-subtask: true
+description: "Review code for quality, security, and maintainability"
+agent: code-reviewer
+subagent: true
 ---
-
 # Code Review Command
 
 Review code changes for quality, security, and maintainability: $ARGUMENTS

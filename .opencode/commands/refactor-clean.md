@@ -1,7 +1,8 @@
 ---
-description: Remove dead code and consolidate duplicates
+description: "Remove dead code and consolidate duplicates"
+agent: refactor-cleaner
+subagent: true
 ---
-
 # Refactor Clean Command
 
 Analyze and clean up the codebase: $ARGUMENTS
