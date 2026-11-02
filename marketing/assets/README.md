@@ -9,8 +9,8 @@ limit.
 | `linkedin/infographic.html` | the card. `?v=l1` or `?v=l2`, `t=` seconds. Open it in a browser to preview |
 | `render.mjs` | captures frames with Chrome, assembles the GIF |
 | `gif.py` | Pillow encoder: one shared palette, no ffmpeg |
-| `linkedin/out/l1.gif` + `.png` | "An agent is what it may do" — authority model (Nov 2) |
-| `linkedin/out/l2.gif` + `.png` | "'Read-only' is a label" — tool surface (Nov 4) |
+| `linkedin/renders/l1.gif` + `.png` | "An agent is what it may do" — authority model (Nov 2) |
+| `linkedin/renders/l2.gif` + `.png` | "'Read-only' is a label" — tool surface (Nov 4) |
 
 ## Regenerate
 

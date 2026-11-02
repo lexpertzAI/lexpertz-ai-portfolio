@@ -15,7 +15,7 @@ import sharp from "sharp";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const html = path.join(here, "linkedin", "infographic.html");
-const outDir = path.join(here, "linkedin", "out");
+const outDir = path.join(here, "linkedin", "renders");
 const tmpRoot = path.join(outDir, ".frames");
 
 const W = 1080;

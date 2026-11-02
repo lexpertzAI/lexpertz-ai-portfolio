@@ -99,7 +99,7 @@ One more: a read-only agent that can call a ticketing API is not read-only. The 
 
 Full architecture writeup in the comments.
 
-**Media:** `marketing/assets/linkedin/out/l1.gif` — animated authority model (1080×1350).
+**Media:** `marketing/assets/linkedin/renders/l1.gif` — animated authority model (1080×1350).
 
 ---
 
@@ -117,7 +117,7 @@ Three checks before the next agent ships:
 
 The prompt is the last thing to tune. The tool surface is the first.
 
-**Media:** `marketing/assets/linkedin/out/l2.gif` — animated tool-surface card (1080×1350).
+**Media:** `marketing/assets/linkedin/renders/l2.gif` — animated tool-surface card (1080×1350).
 
 ---
 
