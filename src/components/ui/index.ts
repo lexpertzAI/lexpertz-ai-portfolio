@@ -10,6 +10,11 @@ export {
 export { BentoCard } from "./bento-card";
 export { Input, type InputProps } from "./input";
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
+export {
+  BlogPostCard,
+  blogPostCardVariants,
+  type BlogPostCardProps,
+} from "./blog-post-card";
 export { Label } from "./label";
 export { Separator } from "./separator";
 export {

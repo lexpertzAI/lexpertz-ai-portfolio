@@ -95,12 +95,38 @@ The old `process-timeline.tsx` was replaced by a server component
 | Files    | `src/components/ui/profile-card.tsx` · `src/components/sections/team-section.tsx`                                                                                                                                        |
 | Commit   | current                                                                                                                                                                                                                  |
 
-### 6. InsightsPreview — Case-Study Cards 🔲
+### 6. InsightsPreview — Dispatch Ledger ✅
 
 **Why:** flat `glow-border` cards; read as generic blog tiles.
 
-**Concept:** hover reveals a "problem → approach → result" triple; category
-color coding; optional reading-progress ring.
+**Concept:** one lead story, one index rail. The newest post becomes an
+8-column featured card with its full 1200×630 cover, byline, reading time, and a
+single brand CTA. The next two posts stack in a 4-column rail as compact cards
+with mono order labels (`02`, `03`) and no image, so the lead story keeps the
+only focal point. The section header closes on a hairline with an "All insights"
+link.
+
+**Implementation notes:**
+
+- `BlogPostCard` (ui) is an adaptation of `card-18`: `motion.div` hover replaced
+  with CSS (`[@media(hover:hover)]`) so the global reduced-motion kill-switch
+  applies; the whole card is one `next/link` (the original nested an overlay
+  anchor around a `Button`, which produced competing interactive targets).
+- Covers are designed 1200×630 posters, so the featured variant puts the image
+  full-width above the content. A center crop in a side-by-side panel cut the
+  artwork's own headline.
+- Dates are formatted by splitting the ISO string, not `Intl`/`new Date()`,
+  keeping server and client renders identical in every timezone.
+- `Badge` gained a `brand-outline` variant (cyan on dark, brand-blue on light)
+  for the category chip.
+- Data maps from `InsightSurface`; `readingTimeMinutes` and `author` are
+  optional on the primitive.
+- The `media` variant carries the same card to the `/insights` index: cover art
+  plus compact type in a 1/2/3-column grid, numbered `01`–`05`.
+
+**Files:** `src/components/ui/blog-post-card.tsx` ·
+`src/components/sections/insights-preview.tsx` ·
+`src/app/(marketing)/insights/page.tsx` · `src/components/ui/badge.tsx`
 
 ### 7. CTASection — Roadmap CTA ✅
 
@@ -186,7 +212,7 @@ dropped `footer-section-4` concept: two rounded cards — a solid brand-blue car
 | 3   | ServicesGrid card interaction           | Tier 1   | ✅ Shipped |
 | 4   | ProcessSteps (replaces ProcessTimeline) | —        | ✅ Shipped |
 | 5   | TeamSection founder anchor              | Tier 2   | ✅ Shipped |
-| 6   | InsightsPreview case cards              | Tier 2   | 🔲 Pending |
+| 6   | InsightsPreview dispatch ledger          | Tier 2   | ✅ Shipped |
 | 7   | CTASection roadmap CTA                  | Tier 2   | ✅ Shipped |
 | 8   | ContactForm polish                      | Tier 3   | 🔲 Pending |
 | 9   | Footer dual-card dock                   | Tier 2   | ✅ Shipped |

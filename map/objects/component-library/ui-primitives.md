@@ -18,9 +18,9 @@ Pages compose primitives; primitives know nothing about the site's content. That
 
 ## Shape
 
-- Barrel: `src/components/ui/index.ts:1-62` — 21 export statements.
+- Barrel: `src/components/ui/index.ts:1-67` — 22 export statements.
 - shadcn-generated: `button`, `badge`, `card`, `input`, `label`, `separator`, `dialog`, `dropdown-menu`, `navigation-menu`, `scroll-area`, `tooltip`, `avatar`.
-- Site-specific: `section` (vertical rhythm + variants, `src/components/ui/section.tsx:26-36`), `container`, `stat-card`, `bento-card`, `growth-chart` (recharts, `src/components/ui/growth-chart.tsx:45`), `cinematic-hero` (GSAP scene), `animated-roadmap`, `cards-stack`, `process-steps`, `profile-card`, `social-cloud`.
+- Site-specific: `section` (vertical rhythm + variants, `src/components/ui/section.tsx:26-36`), `container`, `stat-card`, `bento-card`, `blog-post-card` (dispatch-ledger card), `growth-chart` (recharts, `src/components/ui/growth-chart.tsx:45`), `cinematic-hero` (GSAP scene), `animated-roadmap`, `cards-stack`, `process-steps`, `profile-card`, `social-cloud`.
 - Styling goes through `cn()` (`src/lib/utils.ts`) and Tailwind tokens — no inline hex.
 
 Citations: `src/components/ui/index.ts:1`

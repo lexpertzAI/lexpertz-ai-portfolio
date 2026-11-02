@@ -17,6 +17,8 @@ const badgeVariants = cva(
         outline: "border-border text-muted-foreground",
         brand:
           "border-transparent bg-brand-gradient text-brand-cyan-foreground",
+        "brand-outline":
+          "border-brand-blue/25 bg-brand-blue/5 text-brand-blue dark:border-brand-cyan/25 dark:bg-brand-cyan/10 dark:text-brand-cyan",
       },
     },
     defaultVariants: {

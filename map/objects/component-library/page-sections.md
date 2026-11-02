@@ -26,7 +26,7 @@ A section is the smallest thing a page composes, so it is where content and layo
 | `process-section.tsx` | process steps, `src/content/process.ts` |
 | `team-section.tsx` | team grid, `src/content/team.ts` |
 | `case-study-card.tsx` | card + `CaseStudiesPreview` |
-| `insights-preview.tsx` | client component; receives posts as props (`src/components/sections/insights-preview.tsx:20`) |
+| `insights-preview.tsx` | client component; dispatch-ledger layout where the newest post is the lead story and the next two stack in an index rail; receives posts as props (`src/components/sections/insights-preview.tsx:27`) |
 | `cta-section.tsx` | closing call to action |
 | `contact-form.tsx` | react-hook-form + Zod, `src/lib/validators/contact.ts` |
 

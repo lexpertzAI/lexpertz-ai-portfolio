@@ -25,7 +25,7 @@ The App Router maps files to URLs, so the route table *is* the file tree. A sing
 | `/services/[slug]` | `src/app/(marketing)/services/[slug]/page.tsx:13` | `generateStaticParams` over the 4 services |
 | `/case-studies` | `src/app/(marketing)/case-studies/page.tsx` | static |
 | `/case-studies/[slug]` | `src/app/(marketing)/case-studies/[slug]/page.tsx` | dynamic; no `generateStaticParams` |
-| `/insights` | `src/app/(marketing)/insights/page.tsx:14` | static |
+| `/insights` | `src/app/(marketing)/insights/page.tsx:13` | static; `BlogPostCard` media grid |
 | `/insights/[slug]` | `src/app/(marketing)/insights/[slug]/page.tsx:16` | `generateStaticParams` from disk |
 | `/about`, `/contact` | `src/app/(marketing)/<name>/page.tsx` | static |
 | `/products/axiom-verify` | `src/app/products/axiom-verify/page.tsx` | static |
