@@ -99,6 +99,8 @@ One more: a read-only agent that can call a ticketing API is not read-only. The 
 
 Full architecture writeup in the comments.
 
+**Media:** `marketing/assets/linkedin/out/l1.gif` — animated authority model (1080×1350).
+
 ---
 
 ### L2 — Wednesday Nov 4
@@ -114,6 +116,8 @@ Three checks before the next agent ships:
 3. Log the call and the result the same way you log an analyst's action.
 
 The prompt is the last thing to tune. The tool surface is the first.
+
+**Media:** `marketing/assets/linkedin/out/l2.gif` — animated tool-surface card (1080×1350).
 
 ---
 

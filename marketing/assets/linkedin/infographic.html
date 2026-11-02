@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1080, initial-scale=1" />
+<title>Lexpertz — proof series</title>
+<style>
+  :root {
+    --bg: #06090e;
+    --panel: #0d141d;
+    --line: #1d2a3a;
+    --text: #e8f0f7;
+    --muted: #89a0b8;
+    --cyan: #22d3ee;
+    --indigo: #8b9bff;
+    --amber: #f5a524;
+    --mono: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    --sans: "Liberation Sans", "DejaVu Sans", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; }
+  body {
+    background:
+      radial-gradient(900px 620px at 82% -8%, rgba(34, 211, 238, 0.13), transparent 60%),
+      radial-gradient(720px 520px at -10% 108%, rgba(139, 155, 255, 0.12), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 90px 90px;
+    mask-image: radial-gradient(circle at 50% 40%, black 30%, transparent 78%);
+    -webkit-mask-image: radial-gradient(circle at 50% 40%, black 30%, transparent 78%);
+  }
+  .frame {
+    position: relative; width: 100%; height: 100%;
+    padding: 64px 72px 58px;
+    display: flex; flex-direction: column;
+  }
+  .topbar { display: flex; align-items: center; justify-content: space-between; }
+  .brand {
+    font-family: var(--mono); font-size: 19px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--text);
+  }
+  .brand b { color: var(--cyan); font-weight: 700; }
+  .kicker {
+    font-family: var(--mono); font-size: 16px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .rule {
+    height: 1px; background: linear-gradient(to right, var(--line), transparent);
+    margin-top: 26px;
+  }
+  .progress {
+    position: absolute; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(to right, var(--cyan), var(--indigo));
+  }
+  .headline {
+    margin-top: 74px; font-size: 78px; line-height: 1.02;
+    letter-spacing: -0.035em; font-weight: 700; max-width: 920px;
+  }
+  .headline em { font-style: normal; color: var(--cyan); }
+  .deck {
+    margin-top: 26px; font-size: 27px; line-height: 1.35; color: var(--muted);
+    max-width: 760px;
+  }
+  .rows { margin-top: 62px; display: flex; flex-direction: column; gap: 18px; }
+  .row {
+    position: relative; display: flex; align-items: center; gap: 26px;
+    background: linear-gradient(to right, rgba(13, 20, 29, 0.96), rgba(13, 20, 29, 0.55));
+    border: 1px solid var(--line); border-left: 3px solid var(--line);
+    border-radius: 14px; padding: 26px 30px; min-height: 128px;
+  }
+  .row .idx {
+    font-family: var(--mono); font-size: 16px; color: var(--muted);
+    width: 42px; flex: 0 0 42px;
+  }
+  .row .body { flex: 1; }
+  .row h3 {
+    font-size: 31px; letter-spacing: -0.01em; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .row p { margin-top: 7px; font-size: 21px; color: var(--muted); line-height: 1.3; }
+  .chip {
+    flex: 0 0 auto; font-family: var(--mono); font-size: 14px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 10px 14px; border-radius: 999px; border: 1px solid currentColor;
+  }
+  .chip.allow { color: var(--cyan); background: rgba(34,211,238,0.08); }
+  .chip.scope { color: var(--indigo); background: rgba(139,155,255,0.08); }
+  .chip.human { color: var(--amber); background: rgba(245,165,36,0.08); }
+  .foot {
+    margin-top: auto; display: flex; align-items: flex-end;
+    justify-content: space-between; gap: 40px;
+  }
+  .line {
+    font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; font-weight: 700;
+    max-width: 700px;
+  }
+  .line span { color: var(--cyan); }
+  .meta { text-align: right; font-family: var(--mono); font-size: 15px; color: var(--muted); line-height: 1.7; white-space: nowrap; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); margin-right: 8px; vertical-align: middle; }
+  [data-anim] { opacity: 0; }
+</style>
+</head>
+<body>
+<div class="grid"></div>
+<div class="progress" id="progress"></div>
+<div class="frame">
+  <div class="topbar">
+    <div class="brand">LEX<b>PERTZ</b> / PROOF SERIES</div>
+    <div class="kicker" id="kicker">01 — AUTHORITY</div>
+  </div>
+  <div class="rule"></div>
+
+  <h1 class="headline" id="headline"></h1>
+  <p class="deck" id="deck"></p>
+
+  <div class="rows" id="rows"></div>
+
+  <div class="foot">
+    <div class="line" id="line"></div>
+    <div class="meta" id="meta">
+      <div><span class="dot"></span>EVIDENCE BEFORE DEMOS</div>
+      <div>lexpertzai.cc</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const variant = params.get("v") === "l2" ? "l2" : "l1";
+  const t = Math.max(0, parseFloat(params.get("t") || "0"));
+  const DURATION = 5.0;
+
+  const VARIANTS = {
+    l1: {
+      kicker: "01 — AUTHORITY MODEL",
+      headline: 'An agent is what it may <em>do</em>.',
+      deck: "Decide the authority model before you write a prompt. Four gates, in order.",
+      rows: [
+        ["01", "OBSERVE", "Read the data it needs. Nothing else.", "ALLOWED", "allow"],
+        ["02", "RECOMMEND", "Propose an action. No side effects.", "ALLOWED", "allow"],
+        ["03", "CHANGE", "Act, within a scoped identity.", "SCOPED", "scope"],
+        ["04", "ESCALATE", "Anything irreversible pages a human.", "ALWAYS", "human"],
+      ],
+      line: 'The tool surface is the <span>attack surface</span>.',
+      at: [0.55, 1.15, 1.75, 2.35],
+      footAt: 3.15,
+    },
+    l2: {
+      kicker: "02 — TOOL SURFACE",
+      headline: '“Read-only” is a <em>label</em>.',
+      deck: "A permission is what the tool can do, not what the agent is called.",
+      rows: [
+        ["01", "TICKETING API", "If it can call it, it can close tickets.", "WRITE", "human"],
+        ["02", "ASSET INVENTORY", "If it can query it, it can map your estate.", "READ", "scope"],
+        ["03", "SERVICE ACCOUNT", "Inherited rights are not scoped rights.", "CHECK", "allow"],
+        ["04", "PROMPT", "Tune it after the permissions, never before.", "LAST", "allow"],
+      ],
+      line: 'Audit the <span>tool registry</span> before the prompt.',
+      at: [0.75, 1.45, 2.15, 2.85],
+      footAt: 3.55,
+    },
+  };
+
+  const v = VARIANTS[variant];
+  document.getElementById("kicker").textContent = v.kicker;
+  document.getElementById("headline").innerHTML = v.headline;
+  document.getElementById("deck").textContent = v.deck;
+  document.getElementById("line").innerHTML = v.line;
+
+  const rowsEl = document.getElementById("rows");
+  rowsEl.innerHTML = v.rows.map(([idx, title, copy, chip, kind]) => `
+    <div class="row" data-anim>
+      <div class="idx">${idx}</div>
+      <div class="body"><h3>${title}</h3><p>${copy}</p></div>
+      <div class="chip ${kind}">${chip}</div>
+    </div>`).join("");
+
+  const clamp = (n) => Math.max(0, Math.min(1, n));
+  const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+
+  const headline = document.getElementById("headline");
+  const deck = document.getElementById("deck");
+  const line = document.getElementById("line");
+  const meta = document.getElementById("meta");
+  const rows = [...rowsEl.querySelectorAll(".row")];
+
+  function apply(time) {
+    // Headline holds from frame 0 so the loop restarts on a full frame, not a blank one.
+    headline.style.opacity = 1;
+    headline.style.transform = "none";
+
+    const d = ease((time - 0.32) / 0.55);
+    deck.style.opacity = d;
+    deck.style.transform = `translateY(${(1 - d) * 16}px)`;
+
+    // Fade the content out just before the loop point.
+    const out = 1 - ease((time - 4.55) / 0.4);
+
+    rows.forEach((row, i) => {
+      const p = ease((time - v.at[i]) / 0.55);
+      row.style.opacity = p * out;
+      row.style.transform = `translateY(${(1 - p) * 26}px)`;
+      row.style.borderLeftColor =
+        p > 0.5 ? (row.querySelector(".chip").classList.contains("human") ? "var(--amber)"
+          : row.querySelector(".chip").classList.contains("scope") ? "var(--indigo)" : "var(--cyan)") : "var(--line)";
+      const chip = row.querySelector(".chip");
+      chip.style.transform = `scale(${0.92 + p * 0.08})`;
+    });
+
+    const f = ease((time - v.footAt) / 0.55) * out;
+    line.style.opacity = f;
+    line.style.transform = `translateY(${(1 - f) * 18}px)`;
+    meta.style.opacity = 0.35 + f * 0.65;
+
+    document.getElementById("progress").style.width = `${clamp(time / DURATION) * 100}%`;
+  }
+
+  apply(t);
+  document.documentElement.dataset.ready = "1";
+</script>
+</body>
+</html>
