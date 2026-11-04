@@ -42,6 +42,7 @@ No test framework is installed: `npm test` fails. There is no `tsc --noEmit` pat
 
 - Mobile-first; verified at ~375px and ≥1280px; touch targets ≥44px; reduced motion gated everywhere → [responsive](docs/standards/responsive.md)
 - Reuse before writing: check [reusable-blocks](docs/standards/reusable-blocks.md) first. Page data goes in `src/content/*`, never inline.
+- Code floor: no hardcoded secrets, immutable updates, no `console.log` → [code-floor](docs/standards/code-floor.md)
 - Prefix shell commands with `rtk` → [rtk](docs/standards/rtk.md)
 
 <!-- BEGIN:nextjs-agent-rules -->
